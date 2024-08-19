@@ -61,7 +61,7 @@ export default function LeadDetails() {
     }));
   };
   const handleCancel = () => {
-    router.push('/page.js');
+    router.push('../leads/lead-home');
   };
 
   

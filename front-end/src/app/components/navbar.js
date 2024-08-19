@@ -1,9 +1,9 @@
-// Navbar.js
-"use client"
+
+"use client";
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faBell, faUser } from '@fortawesome/free-regular-svg-icons';
-import { faAngleDown, faUsers, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 const Navbar = ({ onNotificationClick, onUserClick }) => {
@@ -56,7 +56,14 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
               </button>
               {dropdownOpen[menu] && (
                 <div className="absolute left-0 mt-2 w-36 sm:w-40 bg-white shadow-lg rounded-md z-10">
-                  {/* Dropdown content */}
+                
+                  {menu === 'leads' && (
+                    <Link href="/leads/lead-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100"></Link>
+                  )}
+                  {menu === 'opportunities' && (
+                    <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunities Page</Link>
+                  )}
+                
                 </div>
               )}
             </div>
@@ -74,8 +81,6 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           </div>
         </div>
       </div>
-
-      {/* Mobile Navbar */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 bg-white shadow-lg z-50">
           <div className="p-4 flex flex-col">
@@ -96,7 +101,14 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                 </button>
                 {dropdownOpen[menu] && (
                   <div className="mt-2 w-full bg-gray-100 shadow-lg rounded-md">
-                    {/* Dropdown content */}
+                   
+                    {menu === 'leads' && (
+                      <Link href="/leads" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Leads Page</Link>
+                    )}
+                    {menu === 'opportunities' && (
+                      <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Opportunities Page</Link>
+                    )}
+                  
                   </div>
                 )}
               </div>

@@ -1,122 +1,16 @@
 
-
 "use client";
+
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { FaTable, FaThLarge, FaIdCard, FaAngleDown } from "react-icons/fa";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Navbar from '@/app/components/navbar';
 
-// TableView Component
-const TableView = ({ data }) => {
-  return (
-    <div className="overflow-x-auto">
-      <div>
-
-
-      </div>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <input type="checkbox" className="mr-2" />
-              Created on
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Lead Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Phone
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Stack
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Class Mode
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <input type="checkbox" className="mr-2" />
-                  <span className="text-sm text-gray-900">{item.date}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm text-gray-900">{item.status}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm text-gray-900">{item.name}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm text-gray-900">{item.phone}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStackColor(
-                      item.stack
-                    )}`}
-                  >
-                    {item.stack}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getClassModeColor(
-                      item.classMode
-                    )}`}
-                  >
-                    {item.classMode}
-                  </span>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan="6"
-                className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"
-              >
-                No data found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-// Helper function to determine stack color
-const getStackColor = (stack) => {
-  switch (stack) {
-    case "Life Skills":
-      return "bg-orange-200 text-orange-800";
-    case "Study Abroad":
-      return "bg-yellow-200 text-yellow-800";
-    default:
-      return "bg-gray-200 text-gray-800";
-  }
-};
-
-// Helper function to determine class mode color
-const getClassModeColor = (classMode) => {
-  switch (classMode) {
-    case "BLR ClassRoom":
-      return "bg-purple-200 text-purple-800";
-    case "HYD ClassRoom":
-      return "bg-blue-200 text-blue-800";
-    default:
-      return "bg-gray-200 text-gray-800";
-  }
-};
-
 const Dashboard = () => {
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("table");
   const [tableData, setTableData] = useState([]);
@@ -154,17 +48,7 @@ const Dashboard = () => {
   };
 
   const groupData = (data) => {
-    const statuses = [
-      { id: "not_contacted", title: "Not Contacted", color: "bg-[#FFCCCC]" },
-      { id: "attempted", title: "Attempted", color: "bg-[#FFFF99]" },
-      { id: "opportunity", title: "Opportunity", color: "bg-[#CCFFCC]" },
-      { id: "cold_lead", title: "Cold Lead", color: "bg-[#CCCCFF]" },
-    ];
-
-    return statuses.map((status) => ({
-      ...status,
-      leads: data.filter((item) => item.status === status.id),
-    }));
+    // Implement your data grouping logic
   };
 
   const handleSearch = (event) => {
@@ -200,8 +84,15 @@ const Dashboard = () => {
     }
   };
 
+  const handleCreateLead = () => {
+    router.push('/leads/create-lead');
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen p-5">
+      <div className="mb-6">
+        <Navbar />
+      </div>
       <div className="bg-white shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
@@ -212,7 +103,10 @@ const Dashboard = () => {
             </button>
           </div>
           <div className="flex items-center space-x-2">
-            <button className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-2 border border-black rounded">
+            <button
+              onClick={handleCreateLead}
+              className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-2 border border-black rounded"
+            >
               <span>Create Lead</span>
               <FaAngleDown className="text-gray-600" />
             </button>
@@ -224,7 +118,6 @@ const Dashboard = () => {
         </div>
 
         <div className="flex items-center mb-4">
-          {/* Search Bar */}
           <input
             type="text"
             placeholder="Search"
@@ -232,8 +125,6 @@ const Dashboard = () => {
             onChange={handleSearch}
             className="border rounded-md px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-
-          {/* View Mode Buttons */}
           <div className="flex items-center ml-4">
             <button
               onClick={() => toggleViewMode("table")}
@@ -254,9 +145,78 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Content based on View Mode */}
         {viewMode === "table" ? (
-          <TableView data={filteredData} />
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <input type="checkbox" className="mr-2" />
+                    Created on
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Lead Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Phone
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Stack
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Class Mode
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredData.length > 0 ? (
+                  filteredData.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input type="checkbox" className="mr-2" />
+                        <span className="text-sm text-gray-900">{item.date}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">{item.status}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">{item.name}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">{item.phone}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStackColor(item.stack)}`}
+                        >
+                          {item.stack}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getClassModeColor(item.classMode)}`}
+                        >
+                          {item.classMode}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"
+                    >
+                      No data found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="grid grid-cols-4 gap-4 p-4">
@@ -281,8 +241,8 @@ const Dashboard = () => {
                           {column.leads.length > 0 ? (
                             column.leads.map((lead, leadIndex) => (
                               <Draggable
-                                key={lead.id.toString()} // Ensure draggableId is a string
-                                draggableId={lead.id.toString()} // Ensure draggableId is a string
+                                key={lead.id.toString()} 
+                                draggableId={lead.id.toString()} 
                                 index={leadIndex}
                               >
                                 {(provided) => (
@@ -335,7 +295,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 ))
-               )}
+              )}
             </div>
           </DragDropContext>
         )}
@@ -344,5 +304,26 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+const getStackColor = (stack) => {
+  switch (stack) {
+    case "Web":
+      return "bg-blue-500 text-white";
+    case "Mobile":
+      return "bg-green-500 text-white";
+    default:
+      return "bg-gray-500 text-white";
+  }
+};
 
+const getClassModeColor = (classMode) => {
+  switch (classMode) {
+    case "Online":
+      return "bg-yellow-500 text-white";
+    case "Offline":
+      return "bg-red-500 text-white";
+    default:
+      return "bg-gray-500 text-white";
+  }
+};
+
+export default Dashboard;
