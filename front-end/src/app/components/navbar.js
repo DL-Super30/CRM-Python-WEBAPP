@@ -1,10 +1,12 @@
 
+
 "use client";
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faBell, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faAngleDown, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import Image from 'next/image'; // Import the Image component
 
 const Navbar = ({ onNotificationClick, onUserClick }) => {
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -42,10 +44,24 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           </button>
         </div>
 
-        <img src="/menu.59f55fe5 (1).svg" alt="Menu Icon" className="w-8 hidden lg:block" />
-        <div className="flex-1 flex justify-center lg:justify-start items-center my-2 sm:my-0">
-          <img src="/skillcapital.png" alt="Skill Capital" className="w-48 sm:w-60 md:w-80 lg:w-40" />
+        <div className="w-8 hidden lg:block">
+          <Image 
+            src="/menu.59f55fe5 (1).svg" 
+            alt="Menu Icon" 
+            width={32}  // Adjust width as needed
+            height={32} // Adjust height as needed
+          />
         </div>
+
+        <div className="flex-1 flex justify-center lg:justify-start items-center my-2 sm:my-0">
+          <Image 
+            src="/skillcapital.png" 
+            alt="Skill Capital" 
+            width={192}  // Adjust width as needed
+            height={48}  // Adjust height as needed
+          />
+        </div>
+
         <div className="hidden lg:flex justify-items-end align-end sm:space-x-2 text-sm">
           {['Home', 'leads', 'opportunities', 'learners', 'courses', 'activities', 'analytics'].map(menu => (
             <div className="relative" key={menu}>
@@ -68,9 +84,8 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                   )}
                   {menu === 'opportunities' && (
                     <>
-                      <Link href="/opportunities/opportunity-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunity Home</Link>
-                      <Link href="/opportunities/opportunity-details" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunity Details</Link>
-                      <Link href="/opportunities/opportunity-reports" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunity Reports</Link>
+                      <Link href="/opportunity" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunity Home</Link>
+                      <Link href="../opportunity/create-opportunity" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Opportunity</Link>
                     </>
                   )}
                   {menu === 'learners' && (
@@ -107,7 +122,12 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           ))}
           <div className="flex space-x-2 sm:space-x-4 ml-2 sm:ml-4">
             <Link href="/star">
-              <img src="/Stars.png" className='w-6 sm:w-8' alt="Stars" />
+              <Image 
+                src="/Stars.png" 
+                alt="Stars" 
+                width={24}  // Adjust width as needed
+                height={24} // Adjust height as needed
+              />
             </Link>
             <button onClick={onNotificationClick} aria-label="Open notifications">
               <FontAwesomeIcon icon={faBell} size="lg" />
@@ -186,7 +206,12 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
             ))}
             <div className="flex space-x-4 mt-4">
               <Link href="/star">
-                <img src="/Stars.png" className='w-8' alt="Stars" />
+                <Image 
+                  src="/Stars.png" 
+                  alt="Stars" 
+                  width={32}  // Adjust width as needed
+                  height={32} // Adjust height as needed
+                />
               </Link>
               <button onClick={onNotificationClick} aria-label="Open notifications">
                 <FontAwesomeIcon icon={faBell} size="2x" />
@@ -203,4 +228,3 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
 };
 
 export default Navbar;
-

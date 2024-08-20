@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";  // Added useCallback
 import { useRouter } from "next/navigation";
 import { FaTable, FaThLarge, FaIdCard, FaAngleDown } from "react-icons/fa";
 import axios from "axios";
@@ -18,20 +19,8 @@ const Dashboard = () => {
   const [columns, setColumns] = useState([]);
   const [isApiConnected, setIsApiConnected] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const filtered = tableData.filter((item) =>
-      Object.values(item).some((val) =>
-        String(val).toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-    setFilteredData(filtered);
-  }, [searchTerm, tableData]);
-
-  const fetchData = async () => {
+  // useCallback ensures fetchData is stable and doesn't change on every render
+  const fetchData = useCallback(async () => {
     try {
       const tableResponse = await axios.get("/api/table-data");
       const kanbanResponse = await axios.get("/api/leads");
@@ -45,10 +34,30 @@ const Dashboard = () => {
       console.error("Error fetching data:", error);
       setIsApiConnected(false);
     }
-  };
+  }, []); // Empty dependency array ensures fetchData is not recreated on every render
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]); // Fetch data when fetchData changes
+
+  useEffect(() => {
+    const filtered = tableData.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+  }, [searchTerm, tableData]);
 
   const groupData = (data) => {
-  
+    // Define your data grouping logic here
+    // For example:
+    return [
+      { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: [] },
+      { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: [] },
+      { id: '3', title: 'Opportunity', color: 'bg-[#CCFFCC]', leads: [] },
+      { id: '4', title: 'Cold Lead', color: 'bg-[#CCCCFF]', leads: [] },
+    ];
   };
 
   const handleSearch = (event) => {
@@ -180,9 +189,6 @@ const Dashboard = () => {
                         <span className="text-sm text-gray-900">{item.date}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{item.status}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-sm text-gray-900">{item.name}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -241,8 +247,8 @@ const Dashboard = () => {
                           {column.leads.length > 0 ? (
                             column.leads.map((lead, leadIndex) => (
                               <Draggable
-                                key={lead.id.toString()} 
-                                draggableId={lead.id.toString()} 
+                                key={lead.id.toString()}
+                                draggableId={lead.id.toString()}
                                 index={leadIndex}
                               >
                                 {(provided) => (
@@ -327,3 +333,4 @@ const getClassModeColor = (classMode) => {
 };
 
 export default Dashboard;
+
