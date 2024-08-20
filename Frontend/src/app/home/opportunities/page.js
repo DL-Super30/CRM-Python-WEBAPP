@@ -96,30 +96,141 @@ export default function Lead() {
 
         {/* Conditionally Render Form */}
         {showForm && (
+          // <div className="mt-5 p-5 border rounded bg-white shadow-lg">
+          //   <h2 className="text-2xl font-bold mb-4">Create New Opportunity</h2>
+          //   <form className="space-y-4">
+          //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          //       {/* Form fields */}
+          //       <div>
+          //         <label className="block text-sm font-medium text-gray-700">Name</label>
+          //         <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none focus:outline-none p-2" />
+          //       </div>
+          //       <div>
+          //         <label className="block text-sm font-medium text-gray-700">Lead Status</label>
+          //         <select className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none focus:outline-none p-2">
+          //           <option value="" disabled>Select Lead Status</option>
+          //           <option value="option1">Option 1</option>
+          //           <option value="option2">Option 2</option>
+          //           <option value="option3">Option 3</option>
+          //         </select>
+          //       </div>
+          //       {/* More form fields here */}
+          //     </div>
+          //     <div className="flex gap-4 mt-4">
+          //       <button type="button" className="text-black px-8 py-1 border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Create</button>
+          //       <button type="button" className="text-black px-8 py-1 border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Cancel</button>
+          //       <button type="button" className="text-black px-8 py-1 border border-red-500 rounded-full hover:bg-red-600 hover:text-white" onClick={handleCloseFormClick}>Close</button>
+          //     </div>
+          //   </form>
+          // </div>
           <div className="mt-5 p-5 border rounded bg-white shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Create New Opportunity</h2>
+            <h2 className="text-2xl font-bold mb-4">Create New Lead</h2>
             <form className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Form fields */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none focus:outline-none p-2" />
+                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Lead Status</label>
-                  <select className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none focus:outline-none p-2">
-                    <option value="" disabled>Select Lead Status</option>
+                  <select
+                    className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  >
+                    <option value="" disabled selected></option>
                     <option value="option1">Option 1</option>
                     <option value="option2">Option 2</option>
                     <option value="option3">Option 3</option>
                   </select>
                 </div>
-                {/* More form fields here */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">CC</label>
+                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">leadSource</label>
+                  <select
+                    className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  >
+                    <option value="" disabled selected></option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Phone</label>
+                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+                    placeholder="Enter phone number"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Stack</label>
+                  <select
+                    className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  >
+                    <option value="" disabled selected></option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Email</label>
+                  <input type="email" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+                    placeholder="Email"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Course</label>
+                  <select
+                    className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  >
+                    <option value="" disabled selected></option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Fee Quoted</label>
+                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Class Mode</label>
+                  <select
+                    className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2"
+
+                  >
+                    <option value="" disabled selected></option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Batch Timing</label>
+                  <input type="text" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Next nextFollowUp</label>
+                  <input type="date" className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">description</label>
+                  <textarea className=" block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" rows="1"></textarea>
+                </div>
               </div>
-              <div className="flex gap-4 mt-4">
-                <button type="button" className="text-black px-8 py-1 border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Create</button>
-                <button type="button" className="text-black px-8 py-1 border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Cancel</button>
-                <button type="button" className="text-black px-8 py-1 border border-red-500 rounded-full hover:bg-red-600 hover:text-white" onClick={handleCloseFormClick}>Close</button>
+              <div className="flex  gap-4 mt-4">
+                <button type="button" className=" text-black px-8 py-1 border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Create</button>
+                <button type="button" className=" text-black px-8 py-1  border border-sky-500 rounded-full hover:bg-blue-600 hover:text-white">Cancel</button>
+                <button type="button" className=" text-black px-8 py-1  border border-red-500 rounded-full hover:bg-red-600 hover:text-white" onClick={handleCloseFormClick} >Close</button>
+
               </div>
             </form>
           </div>

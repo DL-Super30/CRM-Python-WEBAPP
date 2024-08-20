@@ -1,5 +1,5 @@
 import Image from "next/image";
-// import { BrowserRouter as Router,Routes ,Route} from "react-router-dom";
+import { BrowserRouter as Router,Routes ,Route} from "react-router-dom";
 // import HomePage from './home/homepage';
 
 export default function Home() {
