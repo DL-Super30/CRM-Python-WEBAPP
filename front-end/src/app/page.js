@@ -1,9 +1,6 @@
 
-
-
 "use client";
 import * as React from 'react';
-import Image from 'next/image'
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
@@ -59,7 +56,7 @@ export default function LoginPage() {
                 <div className='md:ms-28 ms-5'>
                     <img className='md:ms-20 ms-5 mb-10 w-3/4 md:w-auto' src="/skillcapital.png" alt="Logo"></img>
                     <div className='border-inherit border-2 rounded-md shadow-lg p-6 w-full md:w-3/4 mt-5 md:ms-10'>
-                        <label className='font-normal text-sm'>User Name</label>
+                        <label className='font-normal text-sm'>Email</label>
                         <TextField
                             fullWidth
                             id="username"
