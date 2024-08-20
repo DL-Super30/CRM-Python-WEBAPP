@@ -8,7 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import the Image component
+import Image from 'next/image'; 
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -69,31 +69,32 @@ export default function LoginPage() {
     };
 
     return (
-        <main>
-            <div className="grid items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-                <div className='md:ms-28 ms-5 mb-20 '>
-                    <div className=' pr-40'>
-                    <img className='md:ms-20 ms-5 mb-10 w-3/4 md:w-auto ' src="/skillcapital.png" alt="Logo" />
-                    </div>
-                    <div className='border-inherit border-2 rounded-md shadow-lg p-6 w-full md:w-3/4 mt-5 md:ms-10'>
+        <main className="flex flex-col md:flex-row min-h-screen">
+  
+            <div className='flex-1 flex justify-center items-center p-5 md:p-10'>
+                <div className='flex flex-col items-center'>
+                    <img className='mb-6 w-9/12' src="/skillcapital.png" alt="Logo" />
+                    <div className='border-inherit border-2 rounded-md shadow-lg p-6 md:w-4/5'>
                         <label className='font-normal text-sm'>Email</label>
                         <TextField
                             fullWidth
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            error={!!usernameError}
+                            helperText={usernameError}
                         />
-                        {usernameError && <div style={{ color: '#E22449', fontSize: '15px' }}>{usernameError}</div>}
 
-                        <label className='font-normal text-sm'>Password</label>
+                        <label className='font-normal text-sm mt-4'>Password</label>
                         <TextField
                             type="password"
                             fullWidth
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            error={!!passwordError}
+                            helperText={passwordError}
                         />
-                        {passwordError && <div style={{ color: '#E22449', fontSize: '15px' }}>{passwordError}</div>}
 
                         <Button
                             fullWidth
@@ -106,27 +107,25 @@ export default function LoginPage() {
 
                         {loginError && <div style={{ color: '#E22449', fontSize: '15px' }}>{loginError}</div>}
 
-                        <div className='flex items-center'>
+                        <div className='flex items-center mt-4'>
                             <Checkbox {...label} />
-                            <span className='text-slate-600'>Remember Me</span>
+                            <span className='text-slate-600 ms-2'>Remember Me</span>
                         </div>
-                        <p className=' text-slate-600 text-center mt-20'>©2024, All rights reserved</p>
+                        <p className='text-slate-600 text-center mt-20'>©2024, All rights reserved</p>
                     </div>
                 </div>
-                <div className='w-100% '>
-                    <div className='mt-12 ms-15'>
-                        <h1 className='text-3xl font-bold w-3/4 text-center text-customBlue ps-10 ms-4'>Seamlessly manage all learner data in a unified platform.</h1>
-                        <p className='text-lg w-3/4 text-center font-light text-customBlue ms-10 lg:ms-14'>Centralize customer data effortlessly. Streamline communication, sales, and support for seamless growth.</p>
-                    </div>
-                    <div className='mt-10'>
-                        <Image
-                            src="/1 Skill Capital - Login Page Image (1).png"
-                            alt="Login Page Visual"
-                            width={600} 
-                            height={400} 
-                            layout="responsive"
-                        />
-                    </div>
+            </div>
+            <div className='flex-1 flex flex-col justify-center items-center p-5 md:p-10'>
+                <div className=''>
+                    <h1 className='text-3xl font-bold text-center text-customBlue mb-4'>Seamlessly manage all learner data in a unified platform.</h1>
+                    <p className='text-lg text-center font-light text-customBlue mb-6'>Centralize customer data effortlessly. Streamline communication, sales, and support for seamless growth.</p>
+                    <Image
+                        src="/1 Skill Capital - Login Page Image (1).png"
+                        alt="Login Page Visual"
+                        width={800} 
+                        height={400} 
+                      
+                    />
                 </div>
             </div>
         </main>
