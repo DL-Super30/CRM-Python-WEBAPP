@@ -1,11 +1,15 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Navbar from '../components/navabar';
-import Chart from 'react-apexcharts';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+
+// Dynamically import the Chart component to only render it on the client-side
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 const Home = () => {
   const [notificationDialogOpen, setNotificationDialogOpen] = useState(false);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
@@ -13,10 +17,12 @@ const Home = () => {
   const [chartSeries, setChartSeries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const fetchChartData = async () => {
     try {
       const response = await axios.get('/api/chart-data'); // Replace with your API endpoint
       const data = response.data;
+
       // Format the data to match the chart library's requirements
       const options = {
         chart: {
@@ -26,12 +32,14 @@ const Home = () => {
           categories: data.categories,
         },
       };
+
       const series = [
         {
           name: 'Sales',
           data: data.values,
         },
       ];
+
       setChartOptions(options);
       setChartSeries(series);
     } catch (err) {
@@ -40,11 +48,14 @@ const Home = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchChartData();
   }, []);
+
   const closeNotificationDialog = () => setNotificationDialogOpen(false);
   const closeUserDialog = () => setUserDialogOpen(false);
+
   return (
     <main className="min-h-screen bg-gray-100">
       <Navbar
@@ -126,4 +137,5 @@ const Home = () => {
     </main>
   );
 };
+
 export default Home;

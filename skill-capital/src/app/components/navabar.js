@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faBell, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faAngleDown, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import Image from 'next/image'; // Importing Image component
+
 const Navbar = ({ onNotificationClick, onUserClick }) => {
   const [dropdownOpen, setDropdownOpen] = useState({
     leads: false,
@@ -32,9 +34,9 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
             <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} size="2x" />
           </button>
         </div>
-        <img src="/menu.59f55fe5 (1).svg" alt="Menu Icon" className="w-8 hidden lg:block" />
+        <Image src="/menu.59f55fe5 (1).svg" alt="Menu Icon" width={32} height={32} className="w-8 hidden lg:block" />
         <div className="flex-1 flex justify-center lg:justify-start items-center my-2 sm:my-0">
-          <img src="/skillcapital.png" alt="Skill Capital" className="w-48 sm:w-60 md:w-80 lg:w-40" />
+          <Image src="/skillcapital.png" alt="Skill Capital" width={160} height={40} className="w-48 sm:w-60 md:w-80 lg:w-40" />
         </div>
         <div className="hidden lg:flex justify-items-end align-end sm:space-x-2 text-sm">
           {['Home', 'leads', 'opportunities', 'learners', 'courses', 'activities', 'analytics'].map(menu => (
@@ -61,7 +63,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           ))}
           <div className="flex space-x-2 sm:space-x-4 ml-2 sm:ml-4">
             <Link href="/star">
-              <img src="/Stars.png" className='w-6 sm:w-8' alt="Stars" />
+              <Image src="/Stars.png" width={24} height={24} className='w-6 sm:w-8' alt="Stars" />
             </Link>
             <button onClick={onNotificationClick} aria-label="Open notifications">
               <FontAwesomeIcon icon={faBell} size="lg" />
@@ -104,7 +106,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
             ))}
             <div className="flex space-x-4 mt-4">
               <Link href="/star">
-                <img src="/Starspng" className='w-8' alt="Stars" />
+                <Image src="/Starspng" width={32} height={32} className='w-8' alt="Stars" />
               </Link>
               <button onClick={onNotificationClick} aria-label="Open notifications">
                 <FontAwesomeIcon icon={faBell} size="2x" />
@@ -119,4 +121,5 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
     </header>
   );
 };
+
 export default Navbar;
