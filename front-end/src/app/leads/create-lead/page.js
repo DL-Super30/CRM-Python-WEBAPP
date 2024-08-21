@@ -1,155 +1,4 @@
 
-
-// "use client";
-// import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-// import { FaIdCard } from 'react-icons/fa';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
-// import Navbar from '@/app/components/navbar';
-
-// export default function LeadDetails() {
-//   const [details, setDetails] = useState({
-//     name: '',
-//     opportunitystatus: '',
-//     CC: '',
-//     opportunitystage: '',
-//     Phone: '',
-//     ClassMode: '',
-//     Email: '',
-//     VisitedStage: '',
-//     FeeQuoted: '',
-//     ColdLeadReason: '',
-//     BatchTiming: '',
-//     nextFollowUp: new Date(),
-//     Status: '',
-//     LeadSource: '',
-//     stack: '',
-//     course: '',
-//   });
-
-//   const [dropdownOptions] = useState({
-//     LeadSource: ['None', 'Walkin', 'StudentReferral', 'Demo', 'WebSite', 'InboundCall', 'GoogleAdWords', 'FacebookAds', 'GoogleMyBusiness', 'WhatsAppDigitalLync'],
-//     opportunitystatus: ['Online', 'Referral', 'Advertisement'],
-//     opportunitystage: ['Online', 'Referral', 'Advertisement'],
-//     DemoAttendedStage: ['Online', 'Referral', 'Advertisement'],
-//     VisitedStage: ['Online', 'Referral', 'Advertisement'],
-//     ColdLeadReason: ['Online', 'Referral', 'Advertisement'],
-//     Status: ['None', 'NotContacted', 'Attempted', 'WarmLead', 'Opportunity', 'AttendedDemo', 'Visited', 'Registered', 'ColdLead'],
-//     stack: ['Frontend', 'Backend', 'Fullstack'],
-//     course: ['Angular', 'AWS', 'Azure', 'AWSWithDevOps', 'BusinessAnalyist', 'DevOps', 'FrontEndAngular', 'FrontEndReact', 'Python', 'Java', 'FullStack'],
-//     BatchTiming: ['7AM_8AM', '8AM_9AM', '9AM_10AM', '10AM_11AM'],
-//     ClassMode: ['HYDClassRoom', 'BLRClassRoom', 'IndiaOnline', 'InternationalOnline']
-//   });
-
-//   const router = useRouter();
-
-//   const handleChange = (e, key) => {
-//     setDetails((prevDetails) => ({
-//       ...prevDetails,
-//       [key]: e.target.value,
-//     }));
-//   };
-
-//   const handleDropdownChange = (key, value) => {
-//     setDetails((prevDetails) => ({
-//       ...prevDetails,
-//       [key]: value,
-//     }));
-//   };
-
-//   const handleDateChange = (date) => {
-//     setDetails((prevDetails) => ({
-//       ...prevDetails,
-//       nextFollowUp: date,
-//     }));
-//   };
-
-//   const handleCancel = () => {
-//     router.push('../leads/lead-home');
-//   };
-
-//   const handleCreate = async () => {
-//     try {
-//       const response = await fetch('/api/lead', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(details),
-//       });
-
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-
-//       const result = await response.json();
-//       console.log('Success:', result);
-
-//       router.push('/next-page');
-//     } catch (error) {
-//       console.error('Error:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-//       <header className="sticky top-0 left-0 w-full bg-white shadow-md">
-//         <div className="pb-4">
-//           <Navbar />
-//         </div>
-//       </header>
-
-//       <div className="container mx-auto p-4 bg-white rounded-lg shadow-md">
-//         <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
-//           <FaIdCard className="text-white text-4xl bg-blue-600 p-2  border-6" />
-//           <span>Create Lead</span>
-//         </div>
-//         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-//           {Object.keys(details).map((key, index) => (
-//             key !== '' && (
-//               <div key={index} className="flex flex-col p-2 border-b">
-//                 <label className="text-gray-500 block mb-1 text-sm sm:text-base">{key.replace(/([A-Z])/g, ' $1').toUpperCase()}:</label>
-//                 {dropdownOptions[key] ? (
-//                   <select
-//                     value={details[key]}
-//                     onChange={(e) => handleDropdownChange(key, e.target.value)}
-//                     className="underline-select p-2 border rounded-md text-sm sm:text-base"
-//                   >
-//                     <option value="" disabled>Select an option</option>
-//                     {dropdownOptions[key].map((option, i) => (
-//                       <option key={i} value={option}>{option}</option>
-//                     ))}
-//                   </select>
-//                 ) : key === 'nextFollowUp' ? (
-//                   <DatePicker
-//                     selected={details.nextFollowUp}
-//                     onChange={handleDateChange}
-//                     className="underline-input w-full p-2 border rounded-md text-sm sm:text-base"
-//                     dateFormat="dd/MM/yyyy"
-//                   />
-//                 ) : (
-//                   <input
-//                     type="text"
-//                     value={details[key]}
-//                     onChange={(e) => handleChange(e, key)}
-//                     className="underline-input p-2 border rounded-md text-sm sm:text-base"
-//                   />
-//                 )}
-//               </div>
-//             )
-//           ))}
-//         </div>
-//       </div>
-
-//       <div className="flex justify-center gap-4 mt-6 bg-white py-4">
-//         <button onClick={handleCancel} className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Cancel</button>
-//         <button onClick={handleCreate} className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Create</button>
-//       </div>
-//     </div>
-//   );
-// }
-// CreateLeadPage.js
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -161,32 +10,55 @@ import Navbar from '@/app/components/navbar';
 export default function CreateLeadPage() {
   const [details, setDetails] = useState({
     name: '',
-    opportunityStatus: '',
-    CC: '',
-    opportunityStage: '',
-    phone: '',
-    classMode: '',
+    cc: '',
+    phone: 0,
     email: '',
-    visitedStage: '',
-    feeQuoted: '',
-    coldLeadReason: '',
-    batchTiming: '',
-    nextFollowUp: new Date(),
-    status: '',
-    leadSource: '',
+    fee_quoted: 0,
+    batch_timing: '',
+    description: '',
+    lead_status: '',
+    lead_source: '',
     stack: '',
     course: '',
+    class_mode: '',
+    next_followup: new Date(),
   });
 
+  const [errors, setErrors] = useState({});
   const router = useRouter();
 
+  // Validation logic
+  const validate = () => {
+    const errors = {};
+
+    if (!details.name) errors.name = "Name is required";
+    if (!details.cc) errors.cc = "CC is required";
+    if (!details.phone || isNaN(details.phone)) errors.phone = "Valid phone number is required";
+    if (!details.email || !/\S+@\S+\.\S+/.test(details.email)) errors.email = "Valid email is required";
+    if (!details.fee_quoted || isNaN(details.fee_quoted)) errors.fee_quoted = "Valid fee is required";
+    if (!details.batch_timing) errors.batch_timing = "Batch timing is required";
+    if (!details.description) errors.description = "Description is required";
+    if (!details.lead_status) errors.lead_status = "Lead status is required";
+    if (!details.lead_source) errors.lead_source = "Lead source is required";
+    if (!details.stack) errors.stack = "Stack is required";
+    if (!details.course) errors.course = "Course is required";
+    if (!details.class_mode) errors.class_mode = "Class mode is required";
+    if (!details.next_followup) errors.next_followup = "Next follow-up date is required";
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle input changes
   const handleChange = (e, key) => {
+    const value = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
     setDetails(prevDetails => ({
       ...prevDetails,
-      [key]: e.target.value
+      [key]: value
     }));
   };
 
+  // Handle dropdown changes
   const handleDropdownChange = (key, value) => {
     setDetails(prevDetails => ({
       ...prevDetails,
@@ -194,97 +66,115 @@ export default function CreateLeadPage() {
     }));
   };
 
-  const handleDateChange = date => {
+  // Handle date changes
+  const handleDateChange = (key, date) => {
     setDetails(prevDetails => ({
       ...prevDetails,
-      nextFollowUp: date
+      [key]: date.toISOString()
     }));
   };
+
 
   const handleCancel = () => {
     router.push('/leads/lead-home');
   };
 
+ 
   const handleCreate = async () => {
+    if (!validate()) return;
+
     try {
-      await fetch('/api/leads', {
+      console.log('Submitting details:', details);
+
+      const response = await fetch('http://44.202.26.131:8000/Insert%20Leads/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(details),
       });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response data:', errorData);
+        throw new Error(`Error: ${errorData.message || 'An error occurred'}`);
+      }
+
+      console.log('Success! Redirecting...');
       router.push('/leads/lead-home');
     } catch (error) {
-      console.error('Error creating lead:', error);
+      console.error('Error creating lead:', error.message);
+      alert(`Error creating lead: ${error.message}`);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-      <header className="sticky top-0 left-0 w-full bg-white shadow-md">
-        <div className="pb-4">
+    <div className="">
+      <header className="sticky top-0 left-0 w-full">
+        <div className="w-full">
           <Navbar />
         </div>
       </header>
-
-      <div className="container mx-auto p-4 bg-white rounded-lg shadow-md">
-        <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
-          <FaIdCard className="text-white text-4xl bg-blue-600 p-2 border-6" />
-          <span>Create Lead</span>
+      <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8 w-full">
+        <div className="container mx-auto p-4 bg-white rounded-lg shadow-md w-full">
+          <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
+            <FaIdCard className="text-white text-4xl bg-blue-600 p-2 border-6" />
+            <span>Create Lead</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+            {Object.keys(details).map((key, index) => (
+              <div key={index} className="flex flex-col p-2 border-b">
+                <label className="text-gray-500 block mb-1 text-sm sm:text-base">
+                  {key.replace(/([A-Z])/g, ' $1').toUpperCase()}:
+                </label>
+                {dropdownOptions[key] ? (
+                  <select
+                    value={details[key]}
+                    onChange={(e) => handleDropdownChange(key, e.target.value)}
+                    className="underline-select p-2 border rounded-md text-sm sm:text-base"
+                  >
+                    <option value="" disabled>Select an option</option>
+                    {dropdownOptions[key].map((option, i) => (
+                      <option key={i} value={option}>{option}</option>
+                    ))}
+                  </select>
+                ) : key === 'next_followup' ? (
+                  <DatePicker
+                    selected={new Date(details[key])}
+                    onChange={(date) => handleDateChange(key, date)}
+                    className="underline-input w-full p-2 border rounded-md text-sm sm:text-base"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                ) : (
+                  <input
+                    type={typeof details[key] === 'number' ? 'number' : 'text'}
+                    value={details[key]}
+                    onChange={(e) => handleChange(e, key)}
+                    className="underline-input p-2 border rounded-md text-sm sm:text-base"
+                  />
+                )}
+                {errors[key] && <span className="text-red-500 text-sm">{errors[key]}</span>}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-          {Object.keys(details).map((key, index) => (
-            <div key={index} className="flex flex-col p-2 border-b">
-              <label className="text-gray-500 block mb-1 text-sm sm:text-base">
-                {key.replace(/([A-Z])/g, ' $1').toUpperCase()}:
-              </label>
-              {dropdownOptions[key] ? (
-                <select
-                  value={details[key]}
-                  onChange={(e) => handleDropdownChange(key, e.target.value)}
-                  className="underline-select p-2 border rounded-md text-sm sm:text-base"
-                >
-                  <option value="" disabled>Select an option</option>
-                  {dropdownOptions[key].map((option, i) => (
-                    <option key={i} value={option}>{option}</option>
-                  ))}
-                </select>
-              ) : key === 'nextFollowUp' ? (
-                <DatePicker
-                  selected={details.nextFollowUp}
-                  onChange={handleDateChange}
-                  className="underline-input w-full p-2 border rounded-md text-sm sm:text-base"
-                  dateFormat="dd/MM/yyyy"
-                />
-              ) : (
-                <input
-                  type="text"
-                  value={details[key]}
-                  onChange={(e) => handleChange(e, key)}
-                  className="underline-input p-2 border rounded-md text-sm sm:text-base"
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <div className="flex justify-center gap-4 mt-6 bg-white py-4">
-        <button onClick={handleCancel} className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Cancel</button>
-        <button onClick={handleCreate} className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Create</button>
+        <div className="flex justify-center gap-4 mt-6 bg-white py-4">
+          <button onClick={handleCancel} className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Cancel</button>
+          <button onClick={handleCreate} className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md text-sm sm:text-base">Create</button>
+        </div>
       </div>
     </div>
   );
 }
 
 const dropdownOptions = {
-  opportunityStatus: ['Status 1', 'Status 2'],
-  CC: ['Option 1', 'Option 2'],
-  opportunityStage: ['Stage 1', 'Stage 2'],
-  classMode: ['Online', 'Offline'],
-  status: ['New', 'Contacted'],
-  leadSource: ['Source 1', 'Source 2'],
+  lead_status: ['Status 1', 'Status 2'],
+  class_mode: ['Online', 'Offline'],
+  lead_source: ['Source 1', 'Source 2'],
   stack: ['Web', 'Mobile'],
   course: ['Course 1', 'Course 2'],
 };
