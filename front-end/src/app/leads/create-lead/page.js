@@ -174,9 +174,9 @@ export default function CreateLeadPage() {
 }
 
 const dropdownOptions = {
-  lead_status: ['Status 1', 'Status 2'],
-  class_mode: ['Online', 'Offline'],
-  lead_source: ['Source 1', 'Source 2'],
-  stack: ['Web', 'Mobile'],
-  course: ['Course 1', 'Course 2'],
+  lead_status: ['Not Contacted', 'Attempted','Warm Lead','Cold Lead'],
+  class_mode: ['BLR Online', 'BLR Offline','HYD Online','HYD Offline'],
+  lead_source: ['None', 'Walk In','Student Refferal','Demo','Website','Google ADs','Facebook ADs'],
+  stack: ['Life Skills', 'Study Abroad','HR'],
+  course: ['Life Skills', 'Full Stack','Devops','Aptitude'],
 };
