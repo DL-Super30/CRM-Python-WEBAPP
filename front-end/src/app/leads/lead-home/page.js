@@ -94,9 +94,9 @@ const Dashboard = () => {
       <div className="mb-2">
         <Navbar />
       </div>
-      <div className="bg-white shadow-md p-12">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
+      <div className="bg-white shadow-md p-12 border-2 border-gray-200 shadow-lg shadow-gray-400">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex items-center space-x-2 ">
             <FaIdCard className="text-white text-4xl bg-blue-500 p-2 rounded-md" />
             <button className="text-xl flex items-center space-x-1">
               <span>All Leads</span>
@@ -117,7 +117,7 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-4 ">
           <input
             type="text"
             placeholder="Search"
@@ -145,16 +145,16 @@ const Dashboard = () => {
           </div>
         </div>
         {viewMode === 'table' ? (
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 ">
             <thead className="bg-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stack</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class Mode</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <tr className="">
+                <th className="px-6 py-3   text-left text-xs  font-bold text-gray-500 uppercase tracking-wider">Created At</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
