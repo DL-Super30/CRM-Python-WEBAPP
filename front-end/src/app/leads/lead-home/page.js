@@ -258,7 +258,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('');
+      const response = await fetch('http://44.201.198.122:8000/leads');
       const result = await response.json();
 
       if (Array.isArray(result)) {

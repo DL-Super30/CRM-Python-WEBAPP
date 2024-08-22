@@ -252,5 +252,5 @@ export default function ActivityPanel() {
       </div>
     </div>
   );
-}
+}   
 

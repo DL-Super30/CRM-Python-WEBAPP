@@ -1,4 +1,5 @@
 
+
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -11,9 +12,9 @@ export default function CreateLeadPage() {
   const [details, setDetails] = useState({
     name: '',
     cc: '',
-    phone: 0,
+    phone: '',
     email: '',
-    fee_quoted: 0,
+    fee_quoted: '',
     batch_timing: '',
     description: '',
     lead_status: '',
@@ -33,7 +34,7 @@ export default function CreateLeadPage() {
 
     if (!details.name) errors.name = "Name is required";
     if (!details.cc) errors.cc = "CC is required";
-    if (!details.phone || isNaN(details.phone)) errors.phone = "Valid phone number is required";
+    if (!details.phone || !/^\d{10}$/.test(details.phone)) errors.phone = "Valid phone number is required";
     if (!details.email || !/\S+@\S+\.\S+/.test(details.email)) errors.email = "Valid email is required";
     if (!details.fee_quoted || isNaN(details.fee_quoted)) errors.fee_quoted = "Valid fee is required";
     if (!details.batch_timing) errors.batch_timing = "Batch timing is required";
@@ -74,19 +75,17 @@ export default function CreateLeadPage() {
     }));
   };
 
-
   const handleCancel = () => {
     router.push('/leads/lead-home');
   };
 
- 
   const handleCreate = async () => {
     if (!validate()) return;
 
     try {
       console.log('Submitting details:', details);
 
-      const response = await fetch('http://44.202.26.131:8000/Insert%20Leads/', {
+      const response = await fetch('http://44.202.26.131:8000/leads/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,12 +94,11 @@ export default function CreateLeadPage() {
       });
 
       console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
 
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error response data:', errorData);
-        throw new Error(`Error: ${errorData.message || 'An error occurred'}`);
+        throw new Error(errorData.message || 'An unknown error occurred');
       }
 
       console.log('Success! Redirecting...');
