@@ -28,7 +28,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
   return (
     <header>
       {/* Desktop Navbar */}
-      <div className="relative flex flex-col lg:flex-row bg-white shadow-md lg:p-2 shadow-gray-400">
+      <div className="relative flex flex-col lg:flex-row bg-white shadow-md lg:p-2 shadow-gray-200">
         <div className="lg:hidden absolute left-4 flex items-end z-4">
           <button onClick={handleMobileMenuToggle} aria-label="Toggle mobile menu" className="text-gray-700">
             <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} size="2x" />
