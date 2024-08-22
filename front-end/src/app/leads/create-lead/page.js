@@ -1,5 +1,7 @@
 
 
+
+
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -28,15 +30,14 @@ export default function CreateLeadPage() {
   const [errors, setErrors] = useState({});
   const router = useRouter();
 
-  // Validation logic
   const validate = () => {
     const errors = {};
 
     if (!details.name) errors.name = "Name is required";
     if (!details.cc) errors.cc = "CC is required";
-    if (!details.phone || !/^\d{10}$/.test(details.phone)) errors.phone = "Valid phone number is required";
+    if (!details.phone || !/^\d+$/.test(details.phone)) errors.phone = "Valid phone number is required";
     if (!details.email || !/\S+@\S+\.\S+/.test(details.email)) errors.email = "Valid email is required";
-    if (!details.fee_quoted || isNaN(details.fee_quoted)) errors.fee_quoted = "Valid fee is required";
+    if (!details.fee_quoted || isNaN(parseFloat(details.fee_quoted))) errors.fee_quoted = "Valid fee is required";
     if (!details.batch_timing) errors.batch_timing = "Batch timing is required";
     if (!details.description) errors.description = "Description is required";
     if (!details.lead_status) errors.lead_status = "Lead status is required";
@@ -50,7 +51,6 @@ export default function CreateLeadPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle input changes
   const handleChange = (e, key) => {
     const value = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
     setDetails(prevDetails => ({
@@ -59,7 +59,6 @@ export default function CreateLeadPage() {
     }));
   };
 
-  // Handle dropdown changes
   const handleDropdownChange = (key, value) => {
     setDetails(prevDetails => ({
       ...prevDetails,
@@ -67,7 +66,6 @@ export default function CreateLeadPage() {
     }));
   };
 
-  // Handle date changes
   const handleDateChange = (key, date) => {
     setDetails(prevDetails => ({
       ...prevDetails,
@@ -85,15 +83,21 @@ export default function CreateLeadPage() {
     try {
       console.log('Submitting details:', details);
 
-      const response = await fetch('http://44.202.26.131:8000/leads/', {
+      const requestPayload = {
+        ...details,
+        phone: parseInt(details.phone, 10), // Ensure phone is an integer
+        fee_quoted: parseFloat(details.fee_quoted), // Ensure fee_quoted is a float
+        next_followup: new Date(details.next_followup).toISOString(), // Format next_followup as ISO string
+        created_at: new Date().toISOString() // Set current date as created_at
+      };
+
+      const response = await fetch('http://54.83.147.56:8000/createleads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(details),
+        body: JSON.stringify(requestPayload),
       });
-
-      console.log('Response status:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -104,7 +108,7 @@ export default function CreateLeadPage() {
       console.log('Success! Redirecting...');
       router.push('/leads/lead-home');
     } catch (error) {
-      console.error('Error creating lead:', error.message);
+      console.error('Error creating lead:', error);
       alert(`Error creating lead: ${error.message}`);
     }
   };
@@ -116,23 +120,23 @@ export default function CreateLeadPage() {
           <Navbar />
         </div>
       </header>
-      <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8 w-full">
-        <div className="container mx-auto p-4 bg-white rounded-lg shadow-md w-full">
+      <div className="min-h-screen bg-gray-10 p-4 sm:p-6 lg:p-8 w-full shadow-lg w-full">
+        <div className="container mx-auto p-8 bg-white rounded-lg shadow-md w-full">
           <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
             <FaIdCard className="text-white text-4xl bg-blue-600 p-2 border-6" />
             <span>Create Lead</span>
           </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2 ">
             {Object.keys(details).map((key, index) => (
-              <div key={index} className="flex flex-col p-2 border-b">
-                <label className="text-gray-500 block mb-1 text-sm sm:text-base">
+              <div key={index} className="flex flex-col p-2 border-b border-b-2 border-b-gray-400 ">
+                <label className="text-gray-400 block mb-1 text-sm sm:text-base font-bold">
                   {key.replace(/([A-Z])/g, ' $1').toUpperCase()}:
                 </label>
                 {dropdownOptions[key] ? (
                   <select
                     value={details[key]}
                     onChange={(e) => handleDropdownChange(key, e.target.value)}
-                    className="underline-select p-2 border rounded-md text-sm sm:text-base"
+                    className="underline-select p-2  text-sm sm:text-base "
                   >
                     <option value="" disabled>Select an option</option>
                     {dropdownOptions[key].map((option, i) => (
@@ -143,7 +147,7 @@ export default function CreateLeadPage() {
                   <DatePicker
                     selected={new Date(details[key])}
                     onChange={(date) => handleDateChange(key, date)}
-                    className="underline-input w-full p-2 border rounded-md text-sm sm:text-base"
+                    className="underline-input w-full p-2  text-sm sm:text-base border-black"
                     dateFormat="dd/MM/yyyy"
                   />
                 ) : (
@@ -151,7 +155,7 @@ export default function CreateLeadPage() {
                     type={typeof details[key] === 'number' ? 'number' : 'text'}
                     value={details[key]}
                     onChange={(e) => handleChange(e, key)}
-                    className="underline-input p-2 border rounded-md text-sm sm:text-base"
+                    className="underline-input  p-2 text-sm sm:text-base "
                   />
                 )}
                 {errors[key] && <span className="text-red-500 text-sm">{errors[key]}</span>}

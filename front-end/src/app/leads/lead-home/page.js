@@ -12,22 +12,23 @@
 
 //   const [searchTerm, setSearchTerm] = useState("");
 //   const [viewMode, setViewMode] = useState("table");
-//   const [tableData, setTableData] = useState([]);
+//   const [data, setData] = useState([]);
 //   const [filteredData, setFilteredData] = useState([]);
-//   const [columns, setColumns] = useState([]);
+//   const [kanbanColumns, setKanbanColumns] = useState([]);
 
 //   const fetchData = useCallback(async () => {
 //     try {
-//       const response = await fetch('http://44.202.26.131:8000/Insert%20Leads/');
-//       const data = await response.json();
-//       if (Array.isArray(data)) {
-//         setTableData(data);
-//         setFilteredData(data);
+//       const response = await fetch('http://54.83.147.56:8000/getleads');
+//       const result = await response.json();
 
-//         const groupedData = groupData(data);
-//         setColumns(groupedData);
+//       if (Array.isArray(result)) {
+//         setData(result);
+//         setFilteredData(result);
+        
+//         const kanbanGrouped = groupForKanban(result);
+//         setKanbanColumns(kanbanGrouped);
 //       } else {
-//         console.error('Fetched data is not an array:', data);
+//         console.error('Fetched data is not an array:', result);
 //       }
 //     } catch (error) {
 //       console.error("Error fetching data:", error);
@@ -39,15 +40,16 @@
 //   }, [fetchData]);
 
 //   useEffect(() => {
-//     const filtered = tableData.filter((item) =>
+//     const filtered = data.filter((item) =>
 //       Object.values(item).some((val) =>
 //         String(val).toLowerCase().includes(searchTerm.toLowerCase())
 //       )
 //     );
 //     setFilteredData(filtered);
-//   }, [searchTerm, tableData]);
+//   }, [searchTerm, data]);
 
-//   const groupData = (data) => {
+//   const groupForKanban = (data) => {
+//     // Adjust this grouping logic as needed based on your data structure
 //     return [
 //       { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.status === 'Not Contacted') },
 //       { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.status === 'Attempted') },
@@ -76,8 +78,8 @@
 //       return;
 //     }
 
-//     const sourceColumn = columns.find((col) => col.id === source.droppableId);
-//     const destinationColumn = columns.find(
+//     const sourceColumn = kanbanColumns.find((col) => col.id === source.droppableId);
+//     const destinationColumn = kanbanColumns.find(
 //       (col) => col.id === destination.droppableId
 //     );
 
@@ -85,7 +87,7 @@
 //       const [removed] = sourceColumn.leads.splice(source.index, 1);
 //       destinationColumn.leads.splice(destination.index, 0, removed);
 
-//       setColumns([...columns]);
+//       setKanbanColumns([...kanbanColumns]);
 //     }
 //   };
 
@@ -108,7 +110,7 @@
 //            </button>
 //           </div>
 //            <div className="flex items-center space-x-2">
-//           <button
+//             <button
 //               onClick={handleCreateLead}
 //               className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-2 border border-white rounded"
 //             >
@@ -122,7 +124,7 @@
 //           </div>
 //         </div>
 //         <div className="flex items-center mb-4">
-//          <input
+//           <input
 //             type="text"
 //             placeholder="Search"
 //             value={searchTerm}
@@ -152,8 +154,8 @@
 //           <table className="min-w-full divide-y divide-gray-200">
 //             <thead className="bg-gray-200">
 //               <tr>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created On</th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Status</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created On</th>
+//                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Status</th>
 //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
 //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
 //                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stack</th>
@@ -165,57 +167,55 @@
 //               {Array.isArray(filteredData) && filteredData.length > 0 ? (
 //                 filteredData.map((lead) => (
 //                   <tr key={lead.id}>
-//                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{lead.name}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_on}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.status}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.stack}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.classMode}</td>
+//                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+//                       <button className="text-blue-600 hover:text-blue-800">Edit</button>
+//                     </td>
 //                   </tr>
 //                 ))
 //               ) : (
 //                 <tr>
-//                   <td className="px-6 py-4 text-center" colSpan="6">
-//                     No leads available
-//                   </td>
+//                   <td colSpan="7" className="px-6 py-4 text-center text-gray-500">No data available</td>
 //                 </tr>
 //               )}
 //             </tbody>
 //           </table>
 //         ) : (
-//           <DragDropContext onDragEnd={onDragEnd}>
-//             <Droppable
-//               droppableId="droppable"
-//               direction="horizontal"
-//             >
-//               {(provided) => (
-//                 <div
-//                   ref={provided.innerRef}
-//                   {...provided.droppableProps}
-//                   className="flex space-x-4"
-//                 >
-//                                    {columns.map((column) => (
-//                     <div
-//                       key={column.id}
-//                       className={`p-4 rounded ${column.color}`}
-//                     >
-//                       <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
-//                       <Droppable droppableId={column.id}>
+//           <div className="flex overflow-x-auto">
+//             <DragDropContext onDragEnd={onDragEnd}>
+//               <Droppable droppableId="all-columns" direction="horizontal">
+//                 {(provided) => (
+//                   <div
+//                     ref={provided.innerRef}
+//                     {...provided.droppableProps}
+//                     className="flex space-x-4"
+//                   >
+//                     {kanbanColumns.map((column) => (
+//                       <Droppable key={column.id} droppableId={column.id}>
 //                         {(provided) => (
 //                           <div
 //                             ref={provided.innerRef}
 //                             {...provided.droppableProps}
-//                             className="space-y-2"
+//                             className={`p-4 bg-white shadow-md rounded ${column.color}`}
 //                           >
+//                             <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
 //                             {column.leads.map((lead, index) => (
-//                               <Draggable
-//                                 key={lead.id}
-//                                 draggableId={String(lead.id)}
-//                                 index={index}
-//                               >
+//                               <Draggable key={lead.id} draggableId={String(lead.id)} index={index}>
 //                                 {(provided) => (
 //                                   <div
 //                                     ref={provided.innerRef}
 //                                     {...provided.draggableProps}
 //                                     {...provided.dragHandleProps}
-//                                     className="p-4 bg-white rounded shadow"
+//                                     className="p-2 mb-2 bg-white shadow rounded"
 //                                   >
-//                                     {lead.name}
+//                                     <div className="font-medium">{lead.name}</div>
+//                                     <div className="text-sm text-gray-600">{lead.phone}</div>
+//                                     <div className="text-xs text-gray-500">{lead.stack} - {lead.classMode}</div>
 //                                   </div>
 //                                 )}
 //                               </Draggable>
@@ -224,12 +224,13 @@
 //                           </div>
 //                         )}
 //                       </Droppable>
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </Droppable>
-//           </DragDropContext>
+//                     ))}
+//                     {provided.placeholder}
+//                   </div>
+//                 )}
+//               </Droppable>
+//             </DragDropContext>
+//           </div>
 //         )}
 //       </div>
 //     </div>
@@ -237,7 +238,6 @@
 // };
 
 // export default Dashboard;
-
 
 "use client";
 
@@ -256,10 +256,12 @@ const Dashboard = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [kanbanColumns, setKanbanColumns] = useState([]);
 
+  // Fetch data from the API
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://44.201.198.122:8000/leads');
+      const response = await fetch('http://54.83.147.56:8000/getleads');
       const result = await response.json();
+      console.log('Fetched data:', result); // Debugging line
 
       if (Array.isArray(result)) {
         setData(result);
@@ -288,24 +290,27 @@ const Dashboard = () => {
     setFilteredData(filtered);
   }, [searchTerm, data]);
 
+  // Group data for Kanban view
   const groupForKanban = (data) => {
-    // Adjust this grouping logic as needed based on your data structure
     return [
-      { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.status === 'Not Contacted') },
-      { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.status === 'Attempted') },
-      { id: '3', title: 'Opportunity', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.status === 'Opportunity') },
-      { id: '4', title: 'Cold Lead', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.status === 'Cold Lead') },
+      { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.lead_status === 'Not Contacted') },
+      { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.lead_status === 'Attempted') },
+      { id: '3', title: 'Opportunity', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
+      { id: '4', title: 'Cold Lead', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
     ];
   };
 
+  // Handle search input change
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  // Toggle between table and Kanban views
   const toggleViewMode = (mode) => {
     setViewMode(mode);
   };
 
+  // Handle drag-and-drop functionality
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -331,6 +336,7 @@ const Dashboard = () => {
     }
   };
 
+  // Handle the creation of new leads
   const handleCreateLead = () => {
     router.push('/leads/create-lead');
   };
@@ -394,25 +400,25 @@ const Dashboard = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created On</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stack</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ClassMode</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class Mode</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {Array.isArray(filteredData) && filteredData.length > 0 ? (
                 filteredData.map((lead) => (
-                  <tr key={lead.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_on}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.status}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.stack}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.classMode}</td>
+                  <tr key={lead.phone}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.lead_status || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.stack || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <button className="text-blue-600 hover:text-blue-800">Edit</button>
                     </td>
@@ -420,15 +426,15 @@ const Dashboard = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-gray-500">No data available</td>
+                  <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">No data available</td>
                 </tr>
               )}
             </tbody>
           </table>
         ) : (
-          <div className="flex overflow-x-auto">
+          <div className="overflow-x-auto">
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="all-columns" direction="horizontal">
+              <Droppable droppableId="kanban" direction="horizontal">
                 {(provided) => (
                   <div
                     ref={provided.innerRef}
@@ -445,7 +451,7 @@ const Dashboard = () => {
                           >
                             <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
                             {column.leads.map((lead, index) => (
-                              <Draggable key={lead.id} draggableId={String(lead.id)} index={index}>
+                              <Draggable key={lead.phone} draggableId={String(lead.phone)} index={index}>
                                 {(provided) => (
                                   <div
                                     ref={provided.innerRef}
@@ -455,7 +461,9 @@ const Dashboard = () => {
                                   >
                                     <div className="font-medium">{lead.name}</div>
                                     <div className="text-sm text-gray-600">{lead.phone}</div>
-                                    <div className="text-xs text-gray-500">{lead.stack} - {lead.classMode}</div>
+                                    <div className="text-xs text-gray-500">{lead.stack} - {lead.class_mode}</div>
+                                    <div className="text-xs text-gray-500">Created At: {lead.created_at || 'N/A'}</div>
+                                    <div className="text-xs text-gray-500">Lead Status: {lead.lead_status || 'N/A'}</div>
                                   </div>
                                 )}
                               </Draggable>
@@ -478,3 +486,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
