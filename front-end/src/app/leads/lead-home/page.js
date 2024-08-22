@@ -91,7 +91,7 @@ const Dashboard = () => {
 
   return (
     <div className="bg-white-100 min-h-screen p-2">
-      <div className="mb-2">
+      <div className="mb-2 ">
         <Navbar />
       </div>
       <div className="bg-white shadow-md p-12 border-2 border-gray-200 shadow-lg shadow-gray-400">
