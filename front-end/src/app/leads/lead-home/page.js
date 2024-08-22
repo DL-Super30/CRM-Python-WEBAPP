@@ -90,13 +90,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-white-100 min-h-screen p-2">
-      <div className="mb-2 ">
-        <Navbar />
-      </div>
-      <div className="bg-white shadow-md p-12 border-2 border-gray-200 shadow-lg shadow-gray-400">
+  
+    
+
+      <div className="">
+              <Navbar/>
+              <div className="bg-white-100 min-h-screen ">
+      <div className=" p-8 shadow-md">
         <div className="flex items-center justify-between mb-4 ">
-          <div className="flex items-center space-x-2 ">
+          <div className="flex items-center space-x-2  ">
             <FaIdCard className="text-white text-4xl bg-blue-500 p-2 rounded-md" />
             <button className="text-xl flex items-center space-x-1">
               <span>All Leads</span>
@@ -106,15 +108,15 @@ const Dashboard = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={handleCreateLead}
-              className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-2 border border-white rounded"
+              className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded"
             >
               <span>Create Lead</span>
               <FaAngleDown className="text-gray-600" />
             </button>
-            <button className="flex items-center justify-center space-x-1 bg-gray-100 px-2 border border-black rounded">
+            {/* <button className="flex items-center justify-center space-x-1 bg-gray-100 px-2 border border-black rounded">
               <span>Actions</span>
               <FaAngleDown className="text-gray-600" />
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="flex items-center mb-4 ">
@@ -145,9 +147,9 @@ const Dashboard = () => {
           </div>
         </div>
         {viewMode === 'table' ? (
-          <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 ">
-            <thead className="bg-gray-200">
-              <tr className="">
+          <table className="  min-w-full divide-y divide-gray-200 border-2 border-gray-200 h-[calc(60vh-100px)] shadow-md shadow-gray-600 ">
+            <thead className="bg-gray-200  ">
+              <tr className="  border-gray-400 border" >
                 <th className="px-6 py-3   text-left text-xs  font-bold text-gray-500 uppercase tracking-wider">Created At</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
@@ -207,6 +209,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };
