@@ -274,12 +274,12 @@ const Leads = () => {
                 ) : leads.length > 0 ? (
                   leads.map((lead) => (
                     <tr key={lead.id}>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.createdOn}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.status}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{lead.date}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{lead.lead_status}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.phone}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.stack}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.course}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{lead.contact_no}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{lead.tech_stack}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{lead.courses}</td>
                     </tr>
                   ))
                 ) : (
