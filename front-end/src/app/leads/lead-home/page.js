@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://54.89.205.249:8000/getleads');
+      const response = await fetch('https://fastapi.raghava.site/getleads');
       const result = await response.json();
       console.log('Fetched data:', result);
 
