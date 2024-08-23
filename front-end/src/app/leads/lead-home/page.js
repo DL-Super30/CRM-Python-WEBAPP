@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://54.83.147.56:8000/getleads');
+      const response = await fetch('http://54.89.205.249:8000/getleads');
       const result = await response.json();
       console.log('Fetched data:', result);
 
@@ -90,14 +90,12 @@ const Dashboard = () => {
   };
 
   return (
-  
-    
-
       <div className="">
               <Navbar/>
-              <div className="bg-white-100 min-h-screen ">
-      <div className=" p-8 shadow-md">
-        <div className="flex items-center justify-between mb-4 ">
+       <div className="bg-white-100 min-h-screen ">
+       <div className="border-2 rounded-xl border-gray-200 mt-4 ml-2 mr-2 shadow-md shadow-gray-400">
+      <div className=" p-8 ">
+        <div className="flex items-center justify-between mb-4 p-4">
           <div className="flex items-center space-x-2  ">
             <FaIdCard className="text-white text-4xl bg-blue-500 p-2 rounded-md" />
             <button className="text-xl flex items-center space-x-1">
@@ -147,9 +145,9 @@ const Dashboard = () => {
           </div>
         </div>
         {viewMode === 'table' ? (
-          <table className="  min-w-full divide-y divide-gray-200 border-2 border-gray-200 h-[calc(60vh-100px)] shadow-md shadow-gray-600 ">
-            <thead className="bg-gray-200  ">
-              <tr className="  border-gray-400 border" >
+          <table className="  min-w-full divide-y divide-gray-200 border-2 border-gray-200  shadow-sm shadow-gray-400 rounded-half ">
+            <thead className="bg-gray-200 rounded-md  ">
+              <tr className="  border-gray-400 border " >
                 <th className="px-6 py-3   text-left text-xs  font-bold text-gray-500 uppercase tracking-wider">Created At</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
@@ -159,7 +157,7 @@ const Dashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 h-[calc(vh-100px)]">
               {Array.isArray(filteredData) && filteredData.length > 0 ? (
                 filteredData.map((lead) => (
                   <tr key={lead.phone}>
@@ -185,7 +183,9 @@ const Dashboard = () => {
               )}
             </tbody>
           </table>
+         
         ) : (
+         
           <div className="flex space-x-4">
             {kanbanColumns.map((column) => (
               <div key={column.id} className={`flex flex-col w-1/4 p-4 border rounded-lg ${column.color}`}>
@@ -208,6 +208,7 @@ const Dashboard = () => {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
     </div>

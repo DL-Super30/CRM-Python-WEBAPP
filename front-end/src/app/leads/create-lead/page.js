@@ -179,6 +179,7 @@
 //   stack: ['Life Skills', 'Study Abroad','HR'],
 //   course: ['Life Skills', 'Full Stack','Devops','Aptitude'],
 // };
+
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -269,7 +270,7 @@ export default function CreateLeadPage() {
         created_at: new Date().toISOString()
       };
 
-      const response = await fetch('http://54.83.147.56:8000/createleads', {
+      const response = await fetch('http://54.89.205.249:8000/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -284,8 +285,8 @@ export default function CreateLeadPage() {
       }
 
       console.log('Success! Showing success message...');
-      setShowSuccess(true); // Show success message
-      setTimeout(() => router.push('/leads/lead-home'), 2000); // Redirect after 2 seconds
+      setShowSuccess(true); 
+      setTimeout(() => router.push('/leads/lead-home'), 2000); 
     } catch (error) {
       console.error('Error creating lead:', error);
       alert(`Error creating lead: ${error.message}`);
@@ -351,8 +352,6 @@ export default function CreateLeadPage() {
           </div>
         </div>
       </div>
-
-      {/* Success Message Pop-up */}
       {showSuccess && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg">
@@ -372,7 +371,6 @@ export default function CreateLeadPage() {
     </div>
   );
 }
-
 const dropdownOptions = {
   lead_status: ['Not Contacted', 'Attempted', 'Warm Lead', 'Cold Lead'],
   class_mode: ['BLR Online', 'BLR Offline', 'HYD Online', 'HYD Offline'],
