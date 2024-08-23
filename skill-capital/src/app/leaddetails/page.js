@@ -2,11 +2,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/navabar';
+import { useForm} from 'react-hook-form';
+import Link from 'next/link';
+
 
 const Leads = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalClose,setModalClose] = useState(false)
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [newLead, setNewLead] = useState({
     name: '',
     contact_no: '',
@@ -38,24 +43,16 @@ const Leads = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const submitForm = async (formValues) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/leads/', newLead);
-      setLeads(prevLeads => [...prevLeads, response.data]);
-      setModalOpen(false);
-      setNewLead({
-        name: '',
-        contact_no: '',
-        tech_stack: '',
-        courses: '',
-        lead_status: 'Not Contacted'
-      });
+      const { data } = await axios.post('http://127.0.0.1:8000/api/leads/', formValues);
+      setLeads([...leads, data]);
+      alert('Lead created successfully');
+         setModalOpen(false);
     } catch (error) {
       console.error('Error creating lead:', error);
     }
   };
-
   return (
     <>
       <Navbar />
@@ -101,7 +98,11 @@ const Leads = () => {
                     <tr key={lead.id}>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.date}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.lead_status}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.name}</td>
+                       <td className="px-6 py-4 text-sm text-gray-700">
+                       <Link href={`/leaddetails/${lead.id}`}>
+                       {lead.name}
+                       </Link>
+                     </td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.contact_no}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.tech_stack}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.courses}</td>
@@ -119,89 +120,15 @@ const Leads = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed overflow-auto w-full h-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Create New Lead</h2>
-            {/* <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newLead.name}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Phone</label>
-                <input
-                  type="text"
-                  name="contact_no"
-                  value={newLead.contact_no}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Tech Stack</label>
-                <input
-                  type="text"
-                  name="tech_stack"
-                  value={newLead.tech_stack}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Course</label>
-                <input
-                  type="text"
-                  name="courses"
-                  value={newLead.courses}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Lead Status</label>
-                <select
-                  name="lead_status"
-                  value={newLead.lead_status}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                >
-                  <option value="Not Contacted">Not Contacted</option>
-                  <option value="Attempted">Attempted</option>
-                  <option value="Warm Lead">Warm Lead</option>
-                  <option value="Cold Lead">Cold Lead</option>
-                </select>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Submit
-                </button>
-              </div>
-            </form> */}
+     
              <form onSubmit={handleSubmit(submitForm)}>
         <div className="grid grid-cols-3 gap-6 sm:grid-cols-2">
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+              <label htmlFor="name" className="block  text-sm font-medium text-gray-700">Name</label>
               <input type="text" className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" {...register('name', { required: true })} />
               {errors.name && <p className="text-red-500 text-sm">Name is mandatory</p>}
             </div>
@@ -334,7 +261,19 @@ const Leads = () => {
             </div>
           </div>
         </div>
-        <button type="submit" className="mt-6 w-full bg-indigo-600 text-white p-2 rounded-md">Submit</button>
+         <button
+type="button"
+onClick={() => setModalOpen(false)}
+className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+>
+Cancel
+</button>
+<button
+type="submit"
+className="bg-blue-500 text-white px-4 py-2 rounded"
+>
+Submit
+</button>
       </form>
           </div>
         </div>
