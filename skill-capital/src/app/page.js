@@ -17,6 +17,7 @@ export default function LoginPage() {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [loginError, setLoginError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
         let hasError = false;
@@ -33,22 +34,23 @@ export default function LoginPage() {
             setPasswordError('');
         }
         if (!hasError) {
+            setLoading(true);
             try {
-                const response = await axios.post('http://3.83.12.107:8000/api/login/', {
-                    "username" : username,
-                    "password" : password
+                const response = await axios.post('http://django.raghava.site/api/login/', {
+                    "username": username,
+                    "password": password
                 });
                 if (response.status === 200) {
                     router.push('/dashboard');
-                    console.log(response.data);
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
-                    console.error('Error response:', error.response);
                     setLoginError('Invalid username or password');
                 } else {
                     setLoginError('An error occurred. Please try again.');
                 }
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -65,30 +67,33 @@ export default function LoginPage() {
                         height={200}
                     />
                     <div className='border-inherit border-2 rounded-md shadow-lg p-6 w-full md:w-10/12 mt-5 md:ms-10'>
-                        <label className='font-normal text-sm'>User Name</label>
+                        <label htmlFor="username" className='font-normal text-sm'>User Name</label>
                         <TextField
                             fullWidth
                             id="username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            error={!!usernameError}
+                            helperText={usernameError}
                         />
-                        {usernameError && <div style={{ color: '#E22449', fontSize: '15px' }}>{usernameError}</div>}
-                        <label className='font-normal text-sm'>Password</label>
+                        <label htmlFor="password" className='font-normal text-sm'>Password</label>
                         <TextField
                             type="password"
                             fullWidth
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            error={!!passwordError}
+                            helperText={passwordError}
                         />
-                        {passwordError && <div style={{ color: '#E22449', fontSize: '15px' }}>{passwordError}</div>}
                         <Button
                             fullWidth
                             variant="contained"
                             className='mt-10 mb-5 bg-gradient-to-r from-orange-300 to-pink-500'
                             onClick={handleLogin}
+                            disabled={loading}
                         >
-                            Login
+                            {loading ? 'Logging in...' : 'Login'}
                         </Button>
                         {loginError && <div style={{ color: '#E22449', fontSize: '15px' }}>{loginError}</div>}
                         <div className='flex items-center'>
