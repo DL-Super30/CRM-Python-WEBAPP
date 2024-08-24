@@ -81,13 +81,13 @@ export default function CreateLeadPage() {
     try {
       const requestPayload = {
         ...details,
-        phone: parseInt(details.phone, 10),
+        phone: details.phone,
         fee_quoted: parseFloat(details.fee_quoted),
         next_followup: new Date(details.next_followup).toISOString(),
         created_at: new Date().toISOString()
       };
 
-      const response = await fetch('https://fastapi.raghava.site/createleads', {
+      const response = await fetch('http://107.23.3.162:8000/createleads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,8 +101,8 @@ export default function CreateLeadPage() {
         throw new Error(errorData.message || 'An unknown error occurred');
       }
 
-      setShowSuccess(true); 
-      setTimeout(() => router.push('/leads/lead-home'), 2000); 
+      setShowSuccess(true);
+      setTimeout(() => router.push('/leads/lead-home'), 2000);
     } catch (error) {
       console.error('Error creating lead:', error);
       alert(`Error creating lead: ${error.message}`);
