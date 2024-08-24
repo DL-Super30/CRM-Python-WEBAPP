@@ -181,7 +181,7 @@ export default function CreateLeads() {
 
   const submitForm = async (formValues) => {
     try {
-      const { data } = await axios.post('http://127.0.0.1:8000/api/leads/', formValues);
+      const { data } = await axios.post('http://3.83.12.107:8000/api/leads/', formValues);
       setLeads([...leads, data]);
       alert('Lead created successfully');
     } catch (error) {

@@ -34,7 +34,7 @@ export default function LoginPage() {
         }
         if (!hasError) {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+                const response = await axios.post('http://3.83.12.107:8000/api/login/', {
                     "username" : username,
                     "password" : password
                 });

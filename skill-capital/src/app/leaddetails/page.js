@@ -10,7 +10,8 @@ const Leads = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalClose,setModalClose] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editLeadId, setEditLeadId] = useState(null);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [newLead, setNewLead] = useState({
     name: '',
@@ -53,6 +54,49 @@ const Leads = () => {
       console.error('Error creating lead:', error);
     }
   };
+  const Form = async (formValues) => {
+    try {
+      if (isEditMode) {
+        const response = await axios.put(`http://127.0.0.1:8000/api/leads/${editLeadId}/`, formValues);
+        setLeads(leads.map(lead => lead.id === editLeadId ? response.data : lead));
+        alert('Lead updated successfully');
+      } else {
+        const response = await axios.post('http://127.0.0.1:8000/api/leads/', formValues);
+        setLeads([...leads, response.data]);
+        alert('Lead created successfully');
+      }
+      setModalOpen(false);
+    } catch (error) {
+      console.error('Error saving lead:', error);
+    }
+  };
+   
+
+
+const handleEditClick = (lead) => {
+  setIsEditMode(true);
+  setEditLeadId(lead.id);
+  setModalOpen(true);
+
+  // Populate the form with existing lead data
+  setValue('name', lead.name);
+  setValue('contact_no', lead.contact_no);
+  setValue('tech_stack', lead.tech_stack);
+  setValue('courses', lead.courses);
+  setValue('lead_status', lead.lead_status);
+};
+
+const handleDeleteClick = async (leadId) => {
+  if (window.confirm("Are you sure you want to delete this lead?")) {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/leads/${leadId}/`);
+      setLeads(leads.filter(lead => lead.id !== leadId));
+      alert('Lead deleted successfully');
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+    }
+  }
+};
   return (
     <>
       <Navbar />
@@ -86,31 +130,46 @@ const Leads = () => {
                   <th className="px-6 py-2 text-xs text-gray-500">Phone</th>
                   <th className="px-6 py-2 text-xs text-gray-500">Stack</th>
                   <th className="px-6 py-2 text-xs text-gray-500">Course</th>
+                  <th className="px-6 py-2 text-xs text-gray-500">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">Loading...</td>
+                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Loading...</td>
                   </tr>
                 ) : leads.length > 0 ? (
                   leads.map((lead) => (
                     <tr key={lead.id}>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.date}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.lead_status}</td>
-                       <td className="px-6 py-4 text-sm text-gray-700">
-                       <Link href={`/leaddetails/${lead.id}`}>
-                       {lead.name}
-                       </Link>
-                     </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        <Link href={`/leaduserdetails/${lead.id}`}>
+                          {lead.name}
+                        </Link>
+                      </td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.contact_no}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.tech_stack}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{lead.courses}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        <button
+                          className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                          onClick={() => handleEditClick(lead)}
+                        >
+                          Update
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded"
+                          onClick={() => handleDeleteClick(lead.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">Leads data not found</td>
+                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Leads data not found</td>
                   </tr>
                 )}
               </tbody>
@@ -120,7 +179,7 @@ const Leads = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed overflow-auto w-full h-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed overflow-auto w-screen h-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl font-bold mb-4">Create New Lead</h2>
      
