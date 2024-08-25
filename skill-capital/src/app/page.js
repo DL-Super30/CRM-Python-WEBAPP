@@ -36,12 +36,15 @@ export default function LoginPage() {
         if (!hasError) {
             setLoading(true);
             try {
-                const response = await axios.post('http://django.raghava.site/api/login/', {
+                const response = await axios.post('http://127.0.0.1:8000/api/login/', {
                     "username": username,
                     "password": password
                 });
                 if (response.status === 200) {
-                    router.push('/dashboard');
+                    const token = response.data.token;
+                // Store the token in localStorage for use in future requests
+                localStorage.setItem('token', token);
+                router.push('/dashboard');  // Redirect to the dashboard
                 }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
