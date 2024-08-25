@@ -291,6 +291,7 @@ import Navbar from '../../../component/navbar';
 
 export default function Lead() {
   const [showForm, setShowForm] = useState(false);
+  const [showDetails,setShowDetails]=useState(false);
   const [view, setView] = useState('table'); // 'table' or 'kanban'
   const [leads, setLeads] = useState([]);
   const [selectedLead, setSelectedLead] = useState(null);
@@ -342,14 +343,16 @@ export default function Lead() {
     try {
       const response = await axios.get('http://44.212.21.130:8000/getleads');
       setLeads(response.data); // Update leads state with fetched data
+      
     } catch (error) {
       console.error("There was an error fetching the leads!", error);
     }
   };
   const handleViewDetailsClick =(lead)=>{
     setSelectedLead(lead);
-    setShowForm(true);
-    setFormValues({...lead});
+    setShowDetails(true);
+    setShowForm(false);
+
   }
 
   const handleCloseFormClick = () => {
@@ -399,9 +402,11 @@ export default function Lead() {
         if (selectedLead) {
           
           await axios.put(`http://44.212.21.130:8000/updatelead/${selectedLead.id}`, formValues);
+          window.alert('Lead details Updated Successfully');
         } else {
          
           await axios.post(`http://44.212.21.130:8000/createleads`, formValues);
+          window.alert(' Lead created succefully');
         }
 
         
@@ -705,20 +710,73 @@ export default function Lead() {
           </div>
         )}
 
+{showDetails && selectedLead && (
+          <div className="mt-5 p-5 border rounded bg-white shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Lead Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <strong>Name:</strong> {selectedLead.name}
+              </div>
+              <div>
+                <strong>CC:</strong> {selectedLead.cc}
+              </div>
+              <div>
+                <strong>Phone:</strong> {selectedLead.phone}
+              </div>
+              <div>
+                <strong>Email:</strong> {selectedLead.email}
+              </div>
+              <div>
+                <strong>Fee Quoted:</strong> {selectedLead.fee_quoted}
+              </div>
+              <div>
+                <strong>Batch Timing:</strong> {selectedLead.batch_timing}
+              </div>
+              <div>
+                <strong>Description:</strong> {selectedLead.description}
+              </div>
+              <div>
+                <strong>Lead Status:</strong> {selectedLead.lead_status}
+              </div>
+              <div>
+                <strong>Lead Source:</strong> {selectedLead.lead_source}
+              </div>
+              <div>
+                <strong>Stack:</strong> {selectedLead.stack}
+              </div>
+              <div>
+                <strong>Course:</strong> {selectedLead.course}
+              </div>
+              <div>
+                <strong>Class Mode:</strong> {selectedLead.class_mode}
+              </div>
+              <div>
+                <strong>Next Follow-up:</strong> {selectedLead.next_followup}
+              </div>
+              <div>
+                <strong>Created At:</strong> {new Date(selectedLead.created_at).toLocaleString()}
+              </div>
+            </div>
+            <button onClick={() => setShowDetails(false)} className="bg-red-500 text-white rounded p-2 mt-4">
+              Close Details
+            </button>
+          </div>
+        )}
+
         {/* Conditionally Render Views */}
         {view === 'table' && (
           <div className="overflow-x-auto pt-5">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-400">
+              <thead className="bg-gray-500">
                 <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">createdOn</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">leadStatus</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">createdOn</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">leadStatus</th>
                   
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stack</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">classMode</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Phone</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Stack</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">classMode</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Actions</th>
 
 
                 </tr>
