@@ -118,7 +118,7 @@ const handleDeleteClick = async (leadId) => {
           <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-xl font-medium ml-1 text-blue-950">All Leads</h1>
           <div className="flex space-x-2">
             <button
-              className="bg-blue-500 text-white px-4 py-1 rounded" style={{ marginLeft: '52rem' }}
+              className="bg-blue-500 text-white px-4 py-2 rounded" style={{ marginLeft: '52rem' }}
               onClick={() => {
   setModalOpen(true);
   setIsEditMode(false); // Reset to create mode
