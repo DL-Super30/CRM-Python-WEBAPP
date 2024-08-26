@@ -309,7 +309,7 @@ export default function Lead() {
     course: '',
     class_mode: '',
     next_followup: '',
-    created_at: ''
+    
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -328,7 +328,7 @@ export default function Lead() {
       course: '',
       class_mode: '',
       next_followup: '',
-      created_at: ''
+      
     });
     setShowForm(true);
     setSelectedLead(null);
@@ -427,7 +427,7 @@ export default function Lead() {
           course: '',
           class_mode: '',
           next_followup: '',
-          created_at: ''
+          
         });
         setSelectedLead(null);
         setFormErrors({});
@@ -668,7 +668,7 @@ export default function Lead() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Next nextFollowUp</label>
-                  <input type="text"
+                  <input type="date"
                    name="next_followup"
                    value={formValues.next_followup}
                    onChange={handleInputChange}
@@ -676,16 +676,16 @@ export default function Lead() {
                  {formErrors.nextFollowUp && <p className="text-red-500 text-xs mt-1">{formErrors.nextFollowUp}</p>}
 
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700">Created_at</label>
-                  <input type="text"
+                  <input type="date"
                    name="created_at"
                    value={formValues.created_at}
                    onChange={handleInputChange}
                   className="mt-1 block w-full border-b border-gray-300 bg-transparent rounded-none  focus:outline-none p-2" />
                  {formErrors.nextFollowUp && <p className="text-red-500 text-xs mt-1">{formErrors.nextFollowUp}</p>}
 
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">description</label>
                   <textarea

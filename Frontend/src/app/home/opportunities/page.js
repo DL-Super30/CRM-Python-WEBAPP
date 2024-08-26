@@ -1752,7 +1752,7 @@ export default function Lead() {
               <thead className="bg-gray-500">
                 <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">createdOn</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">leadStatus</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Opportunity Status</th>
                   
                   <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white-500 uppercase tracking-wider">Phone</th>
