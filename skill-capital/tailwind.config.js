@@ -26,3 +26,23 @@ module.exports = {
 //   },
 //   plugins: [],
 // }
+// module.exports = {
+//   theme: {
+//     extend: {
+//       margin: {
+//         '86rem': '86rem',
+//       },
+//     },
+//   },
+//   // other configurations...
+// };
+// <button
+//   className="bg-blue-500 text-white px-4 py-2 rounded ml-86rem"
+//   onClick={() => {
+//     setModalOpen(true);
+//     setIsEditMode(false);
+//     setEditLeadId(null);
+//   }}
+// >
+//   Create Lead
+// </button>

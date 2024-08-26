@@ -4,6 +4,7 @@ import axios from 'axios';
 import Navbar from '../components/navabar';
 import { useForm} from 'react-hook-form';
 import Link from 'next/link';
+import Image from 'next/image';
 
 
 const Leads = () => {
@@ -110,11 +111,11 @@ const handleDeleteClick = async (leadId) => {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">All Leads</h1>
+        <div className="flex  items-center mb-4">
+          <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-2xl ml-1 text-blue-950">All Leads</h1>
           <div className="flex space-x-2">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 text-white px-4 py-2 rounded" style={{ marginLeft: '52rem' }}
               onClick={() => {
   setModalOpen(true);
   setIsEditMode(false); // Reset to create mode
@@ -128,12 +129,12 @@ const handleDeleteClick = async (leadId) => {
           </div>
         </div>
         <div className="bg-white shadow rounded-md">
-          <div className="flex space-x-2 p-4">
+          {/* <div className="flex space-x-2 p-4">
             <button className="bg-blue-500 text-white px-4 py-2 rounded">Not Contacted</button>
             <button className="bg-red-500 text-white px-4 py-2 rounded">Attempted</button>
             <button className="bg-yellow-500 text-white px-4 py-2 rounded">Warm Lead</button>
             <button className="bg-gray-500 text-white px-4 py-2 rounded">Cold Lead</button>
-          </div>
+          </div> */}
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white">
               <thead>
