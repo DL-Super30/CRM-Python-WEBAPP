@@ -5,6 +5,7 @@ import Navbar from '../components/navabar';
 import { useForm} from 'react-hook-form';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaSearch } from 'react-icons/fa';
 
 
 const Leads = () => {
@@ -112,7 +113,7 @@ const handleDeleteClick = async (leadId) => {
       <Navbar />
       <div className="container mx-auto p-6">
         <div className="flex  items-center mb-4">
-          <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-2xl ml-1 text-blue-950">All Leads</h1>
+          <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-xl font-medium ml-1 text-blue-950">All Leads</h1>
           <div className="flex space-x-2">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded" style={{ marginLeft: '52rem' }}
@@ -128,18 +129,30 @@ const handleDeleteClick = async (leadId) => {
             <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded">Actions</button>
           </div>
         </div>
-        <div className="bg-white shadow rounded-md">
+        <div className="relative">
+      <input
+        type="text"
+        placeholder="Search"
+        className="border-2 rounded pl-10 pr-4 py-1 w-72"
+      />
+      <FaSearch className="absolute left-3 top-2 text-gray-500" />
+    </div>
+    
+        <div className="bg-white  mt-4 rounded-md">
           {/* <div className="flex space-x-2 p-4">
             <button className="bg-blue-500 text-white px-4 py-2 rounded">Not Contacted</button>
             <button className="bg-red-500 text-white px-4 py-2 rounded">Attempted</button>
             <button className="bg-yellow-500 text-white px-4 py-2 rounded">Warm Lead</button>
             <button className="bg-gray-500 text-white px-4 py-2 rounded">Cold Lead</button>
           </div> */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
-              <thead>
+          <div className="overflow-x-auto ">
+            <table className="min-w-full border-2 bg-white mt-6 text-center rounded">
+              <thead className='border-2 bg-gray-100'>
                 <tr>
-                  <th className="px-6 py-2 text-xs text-gray-500">Created on</th>
+                <th className="px-4 py-2 ">
+                 <input type="checkbox" />
+                  </th>
+                  <th className="px-6 py-2 text-xs text-gray-500 ">Created on</th>
                   <th className="px-6 py-2 text-xs text-gray-500">Lead Status</th>
                   <th className="px-6 py-2 text-xs text-gray-500">Name</th>
                   <th className="px-6 py-2 text-xs text-gray-500">Phone</th>
@@ -150,23 +163,27 @@ const handleDeleteClick = async (leadId) => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Loading...</td>
+                  <tr className='ml-2'>
+                   
+                    <td colSpan="7" className="px-6 py-2 text-center text-gray-500 ">Loading...</td>
                   </tr>
                 ) : leads.length > 0 ? (
                   leads.map((lead) => (
                     <tr key={lead.id}>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.date}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.lead_status}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                       <td className="px-6 py-2 border-b-2">
+                 <input type="checkbox" className='ml-2' />
+                  </td>
+                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.date}</td>
+                      <td className="py-px text-sm text-gray-700 border-b-2 ">{lead.lead_status}</td>
+                      <td className="py-px text-sm text-gray-700 border-b-2">
                         <Link href={`/leaduserdetails/${lead.id}`}>
                           {lead.name}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.contact_no}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.tech_stack}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">{lead.courses}</td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
+                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.contact_no}</td>
+                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.tech_stack}</td>
+                      <td className="py-px  text-sm text-gray-700 border-b-2">{lead.courses}</td>
+                      <td className="py-px text-sm text-gray-700 border-b-2">
                         <button
                           className="bg-green-500 text-white px-4 py-2 rounded mr-2"
                           onClick={() => handleEditClick(lead)}
