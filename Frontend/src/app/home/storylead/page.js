@@ -341,7 +341,7 @@ export default function Lead() {
 
   const fetchLeads = async () => {
     try {
-      const response = await axios.get('http://44.212.21.130:8000/getleads');
+      const response = await axios.get('http://18.234.102.235:8000/getleads');
       setLeads(response.data); // Update leads state with fetched data
       
     } catch (error) {
@@ -376,7 +376,7 @@ export default function Lead() {
   const handleDeleteClick = async (leadToDelete) => {
     if (window.confirm('Are you sure you want to delete this lead?')) {
       try {
-        await axios.delete(`http://44.212.21.130:8000/deletelead/${leadToDelete.id}`);
+        await axios.delete(`http://18.234.102.235:8000/deletelead/${leadToDelete.id}`);
         setLeads(leads.filter(lead => lead.id !== leadToDelete.id));
       } catch (error) {
         console.error("There was an error deleting the lead!", error);
@@ -401,11 +401,11 @@ export default function Lead() {
        
         if (selectedLead) {
           
-          await axios.put(`http://44.212.21.130:8000/updatelead/${selectedLead.id}`, formValues);
+          await axios.put(`http://18.234.102.235:8000/updatelead/${selectedLead.id}`, formValues);
           window.alert('Lead details Updated Successfully');
         } else {
          
-          await axios.post(`http://44.212.21.130:8000/createleads`, formValues);
+          await axios.post(`http://18.234.102.235:8000/createleads`, formValues);
           window.alert(' Lead created succefully');
         }
 
