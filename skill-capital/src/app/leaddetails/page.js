@@ -6,6 +6,8 @@ import { useForm} from 'react-hook-form';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaSearch } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTableCells } from '@fortawesome/free-solid-svg-icons';
 
 
 const Leads = () => {
@@ -116,7 +118,7 @@ const handleDeleteClick = async (leadId) => {
           <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-xl font-medium ml-1 text-blue-950">All Leads</h1>
           <div className="flex space-x-2">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded" style={{ marginLeft: '52rem' }}
+              className="bg-blue-500 text-white px-4 py-1 rounded" style={{ marginLeft: '52rem' }}
               onClick={() => {
   setModalOpen(true);
   setIsEditMode(false); // Reset to create mode
@@ -126,9 +128,10 @@ const handleDeleteClick = async (leadId) => {
             >
               Create Lead
             </button>
-            <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded">Actions</button>
+            <button className="bg-gray-200 text-gray-700 px-4 py-1 rounded">Actions</button>
           </div>
         </div>
+        <div className='flex justify'>
         <div className="relative">
       <input
         type="text"
@@ -137,7 +140,15 @@ const handleDeleteClick = async (leadId) => {
       />
       <FaSearch className="absolute left-3 top-2 text-gray-500" />
     </div>
+    <button
+      type="submit"
+      className="relative border-2 bg-blue-500 border-gray px-4 ml-2 rounded flex items-center text-white"
+    >
+       <FontAwesomeIcon icon={faTableCells} className="ml-2 text-white" /> Table
     
+    </button>
+    <button type="submit" className="relative border-2 px-4 ml-2 border-gray rounded">Kanban</button>
+    </div>
         <div className="bg-white  mt-4 rounded-md">
           {/* <div className="flex space-x-2 p-4">
             <button className="bg-blue-500 text-white px-4 py-2 rounded">Not Contacted</button>
