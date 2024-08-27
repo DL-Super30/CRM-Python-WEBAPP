@@ -17,6 +17,7 @@ const Leads = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editLeadId, setEditLeadId] = useState(null);
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const [searchQuery, setSearchQuery] = useState('');
   const [newLead, setNewLead] = useState({
     name: '',
     contact_no: '',
@@ -39,6 +40,16 @@ const Leads = () => {
 
     fetchLeads();
   }, []);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredLeads = leads.filter(lead =>
+    lead.courses.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lead.lead_status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -132,14 +143,18 @@ const handleDeleteClick = async (leadId) => {
           </div>
         </div>
         <div className='flex justify'>
-        <div className="relative">
-      <input
-        type="text"
-        placeholder="Search"
-        className="border-2 rounded pl-10 pr-4 py-1 w-72"
-      />
-      <FaSearch className="absolute left-3 top-2 text-gray-500" />
-    </div>
+   
+    <div className="relative">
+  <input
+    type="text"
+    placeholder="Search"
+    value={searchQuery}
+    onChange={handleSearch}
+    className="border-2 rounded pl-10 pr-4 py-1 w-72"
+  />
+  <FaSearch className="absolute left-3 top-2 text-gray-500" />
+</div>
+
     <button
       type="submit"
       className="relative border-2 bg-blue-500 border-gray px-4 ml-2 rounded flex items-center text-white"
@@ -276,7 +291,7 @@ const handleDeleteClick = async (leadId) => {
             <div>
               <label htmlFor="lead_source" className="block text-sm font-medium text-gray-700">Lead Source</label>
               <select className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" {...register('lead_source', { required: true })}>
-                <option value="None">None</option>
+                <option value="None"></option>
                 <option value="WalkIn">WalkIn</option>
                 <option value="StudentReferral">StudentReferral</option>
                 <option value="Demo">Demo</option>
@@ -386,273 +401,3 @@ Submit
 
 export default Leads;
 
-// "use client";
-// import { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import Navbar from '../components/navabar';
-// import { useForm } from 'react-hook-form';
-// import Link from 'next/link';
-
-// const Leads = () => {
-//   const [leads, setLeads] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [modalOpen, setModalOpen] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false);
-//   const [editLeadId, setEditLeadId] = useState(null);
-
-//   // Initialize useForm and destructure setValue
-//   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-
-//   useEffect(() => {
-//     const fetchLeads = async () => {
-//       try {
-//         const response = await axios.get('http://127.0.0.1:8000/api/leads/');
-//         setLeads(response.data);
-//       } catch (error) {
-//         console.error('Error fetching leads:', error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchLeads();
-//   }, []);
-
-//   const submitForm = async (formValues) => {
-//     try {
-//       if (isEditMode) {
-//         const response = await axios.put(`http://127.0.0.1:8000/api/leads/${editLeadId}/`, formValues);
-//         setLeads(leads.map(lead => lead.id === editLeadId ? response.data : lead));
-//         alert('Lead updated successfully');
-//       } else {
-//         const response = await axios.post('http://127.0.0.1:8000/api/leads/', formValues);
-//         setLeads([...leads, response.data]);
-//         alert('Lead created successfully');
-//       }
-//       setModalOpen(false);
-//     } catch (error) {
-//       console.error('Error saving lead:', error);
-//     }
-//   };
-
-//   const handleEditClick = (lead) => {
-//     setIsEditMode(true);
-//     setEditLeadId(lead.id);
-//     setModalOpen(true);
-
-//     // Populate the form with existing lead data
-//     setValue('name', lead.name);
-//     setValue('cc', lead.cc);
-//     setValue('contact_no', lead.contact_no);
-//     setValue('email', lead.email);
-//     setValue('fee_coated', lead.fee_coated);
-//     setValue('batch_timing', lead.batch_timing);
-//     setValue('description', lead.description);
-//     setValue('lead_status', lead.lead_status);
-//     setValue('lead_source', lead.lead_source);
-//     setValue('tech_stack', lead.tech_stack);
-//     setValue('courses', lead.courses);
-//     setValue('class_mode', lead.class_mode);
-//     setValue('date', lead.date);
-//   };
-
-//   const handleDeleteClick = async (leadId) => {
-//     if (window.confirm("Are you sure you want to delete this lead?")) {
-//       try {
-//         await axios.delete(`http://127.0.0.1:8000/api/leads/${leadId}/`);
-//         setLeads(leads.filter(lead => lead.id !== leadId));
-//         alert('Lead deleted successfully');
-//       } catch (error) {
-//         console.error('Error deleting lead:', error);
-//       }
-//     }
-//   };
-
-//   return (
-//     <>
-//       <Navbar />
-//       <div className="container mx-auto p-6">
-//         <div className="flex justify-between items-center mb-4">
-//           <h1 className="text-2xl font-bold">All Leads</h1>
-//           <div className="flex space-x-2">
-//             <button
-//               className="bg-blue-500 text-white px-4 py-2 rounded"
-//               onClick={() => {
-//                 setModalOpen(true);
-//                 setIsEditMode(false); // Reset to create mode
-//                 setEditLeadId(null); // Clear any previously selected lead
-//               }}
-//             >
-//               Create Lead
-//             </button>
-//             <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded">Actions</button>
-//           </div>
-//         </div>
-//         <div className="bg-white shadow rounded-md">
-//           <div className="flex space-x-2 p-4">
-//             <button className="bg-blue-500 text-white px-4 py-2 rounded">Not Contacted</button>
-//             <button className="bg-red-500 text-white px-4 py-2 rounded">Attempted</button>
-//             <button className="bg-yellow-500 text-white px-4 py-2 rounded">Warm Lead</button>
-//             <button className="bg-gray-500 text-white px-4 py-2 rounded">Cold Lead</button>
-//           </div>
-//           <div className="overflow-x-auto">
-//             <table className="min-w-full bg-white">
-//               <thead>
-//                 <tr>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Created on</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Lead Status</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Name</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Phone</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Stack</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Course</th>
-//                   <th className="px-6 py-2 text-xs text-gray-500">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {loading ? (
-//                   <tr>
-//                     <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Loading...</td>
-//                   </tr>
-//                 ) : leads.length > 0 ? (
-//                   leads.map((lead) => (
-//                     <tr key={lead.id}>
-//                       <td className="px-6 py-4 text-sm text-gray-700">{lead.date}</td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">{lead.lead_status}</td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">
-//                         <Link href={`/leaduserdetails/${lead.id}`}>
-//                           {lead.name}
-//                         </Link>
-//                       </td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">{lead.contact_no}</td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">{lead.tech_stack}</td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">{lead.courses}</td>
-//                       <td className="px-6 py-4 text-sm text-gray-700">
-//                         <button
-//                           className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-//                           onClick={() => handleEditClick(lead)}
-//                         >
-//                           Update
-//                         </button>
-//                         <button
-//                           className="bg-red-500 text-white px-4 py-2 rounded"
-//                           onClick={() => handleDeleteClick(lead.id)}
-//                         >
-//                           Delete
-//                         </button>
-//                       </td>
-//                     </tr>
-//                   ))
-//                 ) : (
-//                   <tr>
-//                     <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Leads data not found</td>
-//                   </tr>
-//                 )}
-//               </tbody>
-//             </table>
-//           </div>
-//         </div>
-//       </div>
-
-//       {modalOpen && (
-//         <div className="fixed overflow-auto w-screen h-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-//           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-//             <h2 className="text-xl font-bold mb-4">
-//               {isEditMode ? "Edit Lead" : "Create New Lead"}
-//             </h2>
-//             <form onSubmit={handleSubmit(submitForm)}>
-//               <div className="mb-4">
-//                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-//                   Name
-//                 </label>
-//                 <input
-//                   id="name"
-//                   name="name"
-//                   type="text"
-//                   {...register("name", { required: "Name is required" })}
-//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                 />
-//                 {errors.name && <p className="text-red-500 text-xs italic">{errors.name.message}</p>}
-//               </div>
-
-//               <div className="mb-4">
-//                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contact_no">
-//                   Contact No
-//                 </label>
-//                 <input
-//                   id="contact_no"
-//                   name="contact_no"
-//                   type="text"
-//                   {...register("contact_no", { required: "Contact number is required" })}
-//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                 />
-//                 {errors.contact_no && <p className="text-red-500 text-xs italic">{errors.contact_no.message}</p>}
-//               </div>
-
-//               <div className="mb-4">
-//                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tech_stack">
-//                   Tech Stack
-//                 </label>
-//                 <input
-//                   id="tech_stack"
-//                   name="tech_stack"
-//                   type="text"
-//                   {...register("tech_stack", { required: "Tech stack is required" })}
-//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                 />
-//                 {errors.tech_stack && <p className="text-red-500 text-xs italic">{errors.tech_stack.message}</p>}
-//               </div>
-
-//               <div className="mb-4">
-//                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="courses">
-//                   Courses
-//                 </label>
-//                 <input
-//                   id="courses"
-//                   name="courses"
-//                   type="text"
-//                   {...register("courses", { required: "Courses are required" })}
-//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                 />
-//                 {errors.courses && <p className="text-red-500 text-xs italic">{errors.courses.message}</p>}
-//               </div>
-
-//               <div className="mb-4">
-//                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lead_status">
-//                   Lead Status
-//                 </label>
-//                 <select
-//                   id="lead_status"
-//                   name="lead_status"
-//                   {...register("lead_status", { required: "Lead status is required" })}
-//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-//                 >
-//                   <option value="Not Contacted">Not Contacted</option>
-//                   <option value="Attempted">Attempted</option>
-//                   <option value="Warm Lead">Warm Lead</option>
-//                   <option value="Cold Lead">Cold Lead</option>
-//                 </select>
-//                 {errors.lead_status && <p className="text-red-500 text-xs italic">{errors.lead_status.message}</p>}
-//               </div>
-
-//               <button
-//                 type="button"
-//                 onClick={() => setModalOpen(false)}
-//                 className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-//               >
-//                 Cancel
-//               </button>
-//               <button
-//                 type="submit"
-//                 className="bg-blue-500 text-white px-4 py-2 rounded"
-//               >
-//                 Submit
-//               </button>
-//             </form>
-//           </div>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
-
-// export default Leads;
