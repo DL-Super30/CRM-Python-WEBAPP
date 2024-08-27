@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import Link from 'next/link';
+import Image from 'next/image';
 
 function Navbar(props) {
     const { Navbar } = props;
@@ -17,13 +18,13 @@ function Navbar(props) {
                     {/* Mobile Menu Button */}
                     <div className="flex items-center p-1 lg:hidden">
                         <button onClick={handleMenuToggle} aria-label="Toggle menu">
-                            <img src="/images/menu.svg" width={30} alt="Menu icon" />
+                            <Image src="/images/menu.svg" width={30} height={100} alt="Menu icon" />
                         </button>
                     </div>
 
                     {/* Logo */}
                     <div className="w-5/12 pl-2">
-                        <img src="/images/logo.png" width={350} alt="Logo" />
+                        <Image src="/images/logo.png" width={400} height={400} alt="Logo" />
                     </div>
                 </div>
 
@@ -43,7 +44,7 @@ function Navbar(props) {
                 {/* Desktop Icons */}
                 <div className="hidden lg:flex lg:items-center lg:gap-2 text-2xl">
                     <ul className="flex gap-2">
-                        <li><a href="#" aria-label="AI Icon"><img src="/images/iconAI.webp" width={30} alt="AI Icon" /></a></li>
+                        <li><a href="#" aria-label="AI Icon"><Image src="/images/iconAI.webp" width={30} height={30} alt="AI Icon" /></a></li>
                         <li><a href="#" aria-label="Notifications"><i className="fa-regular fa-bell"></i></a></li>
                         <li><a href="#" aria-label="User Profile"><i className="fa-regular fa-user"></i></a></li>
                     </ul>

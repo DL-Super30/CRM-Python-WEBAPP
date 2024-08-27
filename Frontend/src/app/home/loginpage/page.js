@@ -4,7 +4,7 @@ import axios from 'axios'; // Import axios
 // import { useRouter } from 'next/router';
 // import { Navigate } from "react-router-dom";
 import { useRouter } from "next/navigation";
-
+import Image from 'next/image'
 
 
 
@@ -143,7 +143,7 @@ function Logins() {
       <div className="flex w-full lg:flex lg:h-screen">
         <div className="p-10 pb-8 lg:w-1/2 flex flex-col justify-center bg-white lg:pl-20">
           <div className="pl-5">
-            <img src="/images/logo.png" alt="logo" />
+            <Image src="/images/logo.png" width={400} height={300} alt="logo" />
           </div>
 
           <form onSubmit={handleSubmit} id="myform" className="container-sm relative top-9 border rounded max-w-xl shadow-lg p-9">
@@ -198,12 +198,10 @@ function Logins() {
         <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white pt-8">
           <h1 className="text-2xl font-bold text-center text-[#042D60] text-[2rem] w-3/4">Seamlessly manage all learner data in a unified platform.</h1>
           <p className="text-center text-lg text-gray-700 w-3/4">Centralize customer data effortlessly. Streamline communication, sales, and support for seamless growth.</p>
-          <img src="/images/pinkcrm.png" alt="skill-capital img" />
+          <Image src="/images/pinkcrm.png"width={750} height={300} alt="skill-capital img" />
         </div>
       </div>
-      <div>
-        <button onSubmit={handleLogout}>logout</button>
-      </div>
+      
     </main>
   );
 }
