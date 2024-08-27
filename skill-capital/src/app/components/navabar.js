@@ -5,7 +5,7 @@ import { faStar, faBell, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faAngleDown, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import Image from 'next/image'; // Importing Image component
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';//importing navigation
 
 const Navbar = ({ onNotificationClick, onUserClick }) => {
   const [dropdownOpen, setDropdownOpen] = useState({
@@ -53,13 +53,13 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
               {dropdownOpen[menu] && (
                 <div className="absolute left-0 mt-2 w-36 sm:w-40 bg-white shadow-lg rounded-md z-10" >
                    {menu === 'Home' && (
-                    <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Home screen</Link>
+                    <Link href="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-2">Home screen</Link>
                   )}
                   {menu === 'leads' && (
-                    <Link href="/leaddetails" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">lead details</Link>
+                    <Link href="/leaddetails" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-2">lead details</Link>
                   )}
                   {menu === 'opportunities' && (
-                    <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Opportunities details</Link>
+                    <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 border-2">Opportunities details</Link>
                   )}
                 </div>
               )}
