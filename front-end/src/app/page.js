@@ -120,15 +120,15 @@ export default function LoginPage() {
                 </div>
             </div>
             <div className='flex-1 flex flex-col justify-center items-center p-5 md:p-10'>
-                <div className=''>
+                <div className=" max-w-[1600px] mx-auto">
                     <h1 className='text-4xl font-bold text-center text-DarkBlue-800 mb-4'>Seamlessly manage all learner data in a unified platform.</h1>
                     <p className='text-lg text-center font-light text-customBlue mb-6'>Centralize customer data effortlessly. Streamline communication, sales, and support for seamless growth.</p>
-                    <Image
-                        className='w-full'
-                        src="/1 Skill Capital - Login Page Image (1).png"
+                    <Image 
+                         className=" w-auto"
+                        src="/1 Skill Capital - Login Page Image (1).png "
                         alt="Login Page Visual"
-                        width={800}
-                        height={400}
+                        width={900}
+                        height={900}
                     />
                 </div>
             </div>
