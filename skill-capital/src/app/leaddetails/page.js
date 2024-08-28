@@ -29,7 +29,14 @@ const Leads = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/leads/');
+        const token = localStorage.getItem('authToken'); // Retrieve the token
+        const response = await axios.get('http://127.0.0.1:8000/api/leads/', {
+          headers: {
+            Authorization: `Token:a24176ca85fa10139e64ab59ccd681585a8de244`// Include the token in the header
+          }
+      });
+        
+        
         setLeads(response.data);
       } catch (error) {
         console.error('Error fetching leads:', error);
