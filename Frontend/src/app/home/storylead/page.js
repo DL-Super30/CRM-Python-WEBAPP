@@ -649,7 +649,7 @@ export default function Lead() {
               </tbody>
             </table>
           </div>
-        )}
+        )} 
 
         {view === "kanban" && (
           <div className="container mx-auto p-4 mt-5">
