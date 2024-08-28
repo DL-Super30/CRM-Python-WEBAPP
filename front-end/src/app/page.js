@@ -120,9 +120,9 @@ export default function LoginPage() {
                 </div>
             </div>
             <div className='flex-1 flex flex-col justify-center items-center p-5 md:p-10'>
-                <div className=" max-w-[1600px] mx-auto">
-                    <h1 className='text-4xl font-bold text-center text-DarkBlue-800 mb-4'>Seamlessly manage all learner data in a unified platform.</h1>
-                    <p className='text-lg text-center font-light text-customBlue mb-6'>Centralize customer data effortlessly. Streamline communication, sales, and support for seamless growth.</p>
+                <div className=" max-w-[1600px] mx-auto ">
+                    <h1 className='text-4xl font-bold text-center  mb-4 text-[rgb(4,45,96)]'>Seamlessly manage all learner data in a unified platform.</h1>
+                    <p className='text-xl text-center font-normal mb-6  text-[rgb(4,45,96)]'>Centralize customer data effortlessly. Streamline<br/> communication, sales, and support for seamless growth.</p>
                     <Image 
                          className=" w-auto"
                         src="/1 Skill Capital - Login Page Image (1).png "
