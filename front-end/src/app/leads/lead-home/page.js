@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://3.19.227.183:8000/getleads');
+      const response = await fetch('http://18.216.178.154:8000/getleads');
       const result = await response.json();
       console.log('Fetched data:', result);
 
@@ -111,7 +111,7 @@ const Dashboard = () => {
               console.error('Invalid leadId:', leadId);
               return;
             }
-            const response = await fetch(`http://3.19.227.183:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://18.216.178.154:8000/deletelead/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -236,7 +236,6 @@ const Dashboard = () => {
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
-
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
                   </tr>
                 </thead>
@@ -252,14 +251,15 @@ const Dashboard = () => {
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
-                          {lead.lead_status || 'N/A'}
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
                         <td className={`px-6 py-4 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
                           {lead.stack || 'N/A'}
                         </td>
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
+                          {lead.lead_status || 'N/A'}
+                        </td>
+                        
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
                       </tr>
                     ))

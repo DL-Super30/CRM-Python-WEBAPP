@@ -1,4 +1,3 @@
-
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,116 +6,156 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Navbar from '@/app/components/navbar';
 
-export default function LeadDetails() {
+export default function CreateLeadPage() {
   const [details, setDetails] = useState({
     name: '',
-    opportunitystatus: '',
-    CC:'',
-    opportunitystage: '',
-    Phone:'',
-    DemoAttendedStage: '',
-    Email:'',
-    VisitedStage: '',
-    FeeQuoted:'',
-    ColdLeadReason: '',
-    BatchTiming:'',
-    nextFollowUp: new Date(),
-    LeadStatus: '',
-    LeadSource: '',
-    stack:'',
+    cc: '',
+    phone: '',
+    email: '',
+    fee_quoted: '',
+    batch_timing: '',
+    description: '',
+    lead_status: '',
+    lead_source: '',
+    stack: '',
     course: '',
+    class_mode: '',
+    next_followup: new Date(),
   });
 
-  const [dropdownOptions] = useState({
-    LeadSource: ['Online', 'Referral', 'Advertisement'],
-    opportunitystatus:['online','Referral','advertisement'],
-    opportunitystage:['online','Referral','advertisement'],
-    DemoAttendedStage:['online','Referral','advertisement'],
-    VisitedStage:['online','Referral','advertisement'],
-    ColdLeadReason:['online','Referral','advertisement'],
-    LeadStatus:['online','Referral','advertisement'],
-    stack: ['Frontend', 'Backend', 'Fullstack'],
-    course: ['Course A', 'Course B', 'Course C']
-  });
-
+  const [errors, setErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
+  const validate = () => {
+    const errors = {};
+
+    if (!details.name) errors.name = "Name is required";
+    if (!details.cc) errors.cc = "CC is required";
+    if (!details.phone || !/^\d+$/.test(details.phone)) errors.phone = "Valid phone number is required";
+    if (!details.email || !/\S+@\S+\.\S+/.test(details.email)) errors.email = "Valid email is required";
+    if (!details.fee_quoted || isNaN(parseFloat(details.fee_quoted))) errors.fee_quoted = "Valid fee is required";
+    if (!details.batch_timing) errors.batch_timing = "Batch timing is required";
+    if (!details.description) errors.description = "Description is required";
+    if (!details.lead_status) errors.lead_status = "Lead status is required";
+    if (!details.lead_source) errors.lead_source = "Lead source is required";
+    if (!details.stack) errors.stack = "Stack is required";
+    if (!details.course) errors.course = "Course is required";
+    if (!details.class_mode) errors.class_mode = "Class mode is required";
+    if (!details.next_followup) errors.next_followup = "Next follow-up date is required";
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleChange = (e, key) => {
-    setDetails((prevDetails) => ({
+    const value = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
+    setDetails(prevDetails => ({
       ...prevDetails,
-      [key]: e.target.value,
+      [key]: value
     }));
-  };
-  const handleDropdownChange = (key, value) => {
-    setDetails((prevDetails) => ({
-      ...prevDetails,
-      [key]: value,
-    }));
-  };
-  const handleDateChange = (date) => {
-    setDetails((prevDetails) => ({
-      ...prevDetails,
-      nextFollowUp: date,
-    }));
-  };
-  const handleCancel = () => {
-    router.push('../opportunity');
   };
 
-  
-  const handleCreate = () => {
-    router.push('/next-page'); 
+  const handleDropdownChange = (key, value) => {
+    setDetails(prevDetails => ({
+      ...prevDetails,
+      [key]: value
+    }));
   };
+
+  const handleDateChange = (key, date) => {
+    setDetails(prevDetails => ({
+      ...prevDetails,
+      [key]: date ? date.toISOString() : ''
+    }));
+  };
+
+  const handleCancel = () => {
+    router.push('/leads/lead-home');
+  };
+
+  const handleCreate = async () => {
+    if (!validate()) return;
+
+    try {
+      const requestPayload = {
+        ...details,
+        phone: details.phone,
+        fee_quoted: parseFloat(details.fee_quoted),
+        next_followup: new Date(details.next_followup).toISOString(),
+        created_at: new Date().toISOString()
+      };
+
+      const response = await fetch('http://18.216.178.154:8000/createleads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestPayload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response data:', errorData);
+        throw new Error(errorData.message || 'An unknown error occurred');
+      }
+
+      setShowSuccess(true);
+      setTimeout(() => router.push('/leads/lead-home'), 2000);
+    } catch (error) {
+      console.error('Error creating lead:', error);
+      alert(`Error creating lead: ${error.message}`);
+    }
+  };
+
 
   return (
-   
-    <div className="min-h-screen bg-gray-100 p-4">
-
-      <div className="w-full">
-      <header className="sticky top-0 left-0 w-full"> 
-         <div className="pb-4">
-         <Navbar />
-      </div>
-        </header>
-      
-        <div className="container p-8 bg-white scrollable-container">
-          <div className="flex justify-start align-center font-bold text-2xl gap-8">
-            <FaIdCard className="text-white text-4xl bg-blue-600 border-6" /> Create Opportunity
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 mt-10">
+  <div className="relative min-h-screen bg-gray-10 w-full">
+  <header className="sticky top-0 left-0 w-full">
+    <Navbar />
+  </header>
+  <div>
+    <div className="container mx-auto p-10 bg-white rounded-lg border-gray-600 shadow-lg">
+      <div className="flex flex-col h-[calc(100vh-160px)]">
+        <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
+          <FaIdCard className="text-white text-4xl bg-blue-600 p-2 border-6" />
+          <span>Create Opportunity</span>
+        </div>
+        <div className="overflow-y-auto">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
             {Object.keys(details).map((key, index) => (
-              key !== '' && (
-                <div key={index} className="flex flex-col p-2 border-b mr-4">
-                  <label className="text-gray-400 block mb-1">{key.replace(/([A-Z])/g, ' $1').toUpperCase()}:</label>
-                  {dropdownOptions[key] ? (
-                    <select
-                      value={details[key]}
-                      onChange={(e) => handleDropdownChange(key, e.target.value)}
-                      className="underline-select"
-                    >
-                      <option value="" disabled>Select an option</option>
-                      {dropdownOptions[key].map((option, i) => (
-                        <option key={i} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  ) : key === 'nextFollowUp' ? (
-                    <DatePicker
-                      selected={details.nextFollowUp}
-                      onChange={handleDateChange}
-                      className="underline-input w-full"
-                      dateFormat="dd/MM/yyyy"
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      value={details[key]}
-                      onChange={(e) => handleChange(e, key)}
-                      className="underline-input"
-                    />
-                  )}
-                </div>
-              )
+              <div key={index} className="flex flex-col border-b border-b-2 border-b-gray-400">
+                <label className="text-gray-400 block mb-1 text-sm sm:text-base font-bold">
+                  {key.replace(/([A-Z])/g, ' $1').toUpperCase()}:
+                </label>
+                {dropdownOptions[key] ? (
+                  <select
+                    value={details[key]}
+                    onChange={(e) => handleDropdownChange(key, e.target.value)}
+                    className="underline-select p-2 text-sm sm:text-base"
+                  >
+                    <option value="" disabled>Select an option</option>
+                    {dropdownOptions[key].map((option, i) => (
+                      <option key={i} value={option}>{option}</option>
+                    ))}
+                  </select>
+                ) : key === 'next_followup' ? (
+                  <DatePicker
+                    selected={details[key] ? new Date(details[key]) : new Date()}
+                    onChange={(date) => handleDateChange(key, date)}
+                    className="underline-input w-full p-2 text-sm sm:text-base border-black"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                ) : (
+                  <input
+                    type={typeof details[key] === 'number' ? 'number' : 'text'}
+                    value={details[key]}
+                    onChange={(e) => handleChange(e, key)}
+                    className="underline-input p-2 text-sm sm:text-base"
+                  />
+                )}
+                {errors[key] && <span className="text-red-500 text-sm">{errors[key]}</span>}
+              </div>
             ))}
           </div>
         </div>
@@ -124,7 +163,35 @@ export default function LeadDetails() {
       <div className="flex justify-center gap-4 mt-6 sticky bottom-0 bg-white py-4">
         <button onClick={handleCancel} className="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
         <button onClick={handleCreate} className="bg-blue-500 text-white py-2 px-4 rounded">Create</button>
+     </div>
+    </div>
+  </div>
+  {showSuccess && (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg">
+        <div className="flex items-center gap-2">
+          <FaIdCard className="text-2xl" />
+          <span className="text-lg font-semibold">Lead Created Successfully!</span>
+        </div>
+        <button
+          onClick={() => setShowSuccess(false)}
+          className="mt-4 bg-white text-green-500 py-2 px-4 rounded-md shadow-md"
+        >
+          Close
+        </button>
       </div>
     </div>
-  );
+  )}
+</div>
+);
 }
+
+const dropdownOptions = {
+lead_status: ['Not Contacted', 'Attempted', 'Warm Lead', 'Cold Lead'],
+class_mode: ['BLR Online', 'BLR Offline', 'HYD Online', 'HYD Offline'],
+lead_source: ['None', 'Walk In', 'Student Referral', 'Demo', 'Website', 'Google Ads', 'Facebook Ads'],
+stack: ['Life Skills', 'Study Abroad', 'HR'],
+course: ['Life Skills', 'Full Stack', 'DevOps', 'Aptitude'],
+};
+
+
