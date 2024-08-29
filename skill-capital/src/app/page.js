@@ -43,7 +43,7 @@ export default function LoginPage() {
                 if (response.status === 200) {
                     const token = response.data.token;
                 // Store the token in localStorage for use in future requests
-                localStorage.setItem('token', token);
+                localStorage.setItem('token',token);
                 router.push('/dashboard');  // Redirect to the dashboard
                 }
             } catch (error) {
