@@ -19,6 +19,7 @@ const Dashboard = () => {
 
   const statusColorMappings = {
     'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
+    'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
     'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
     'Opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200',
     'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
@@ -32,7 +33,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://3.95.210.5:8000/getleads');
+      const response = await fetch('http://3.19.227.183:8000/getleads');
       const result = await response.json();
       console.log('Fetched data:', result);
 
@@ -86,7 +87,7 @@ const Dashboard = () => {
   };
 
   const handleCheckboxChange = (id) => {
-    console.log("Checkbox clicked with ID:", id); // Log the ID
+    console.log("Checkbox clicked with ID:", id); 
     setSelectedLeads((prevSelected) =>
       prevSelected.includes(id)
         ? prevSelected.filter((selectedId) => selectedId !== id)
@@ -110,7 +111,7 @@ const Dashboard = () => {
               console.error('Invalid leadId:', leadId);
               return;
             }
-            const response = await fetch(`http://3.95.210.5:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://3.19.227.183:8000/deletelead/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -231,14 +232,15 @@ const Dashboard = () => {
                       />
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
+
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 h-[calc(vh-100px)]">
+                <tbody className="bg-white divide-y divide-gray-200 h-100[calc(vh-100px)]">
                   {Array.isArray(filteredData) && filteredData.length > 0 ? (
                     filteredData.map((lead) => (
                       <tr key={lead.id}>

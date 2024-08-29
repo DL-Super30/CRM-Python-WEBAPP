@@ -286,7 +286,7 @@ export default function CreateLeadPage() {
         created_at: new Date().toISOString()
       };
 
-      const response = await fetch('http://3.95.210.5:8000/createleads', {
+      const response = await fetch('http://3.19.227.183:8000/createleads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

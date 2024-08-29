@@ -13,7 +13,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function LoginPage() {
     const router = useRouter();
-    const apiUrl = 'https://fastapi.raghava.site/login'; 
+    const apiUrl = 'http://3.19.227.183:8005/login'; 
     const [Email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [EmailError, setEmailError] = useState('');
