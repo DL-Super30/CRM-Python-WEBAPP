@@ -59,7 +59,6 @@ export default function Lead() {
   //jsdbfihaso
   const handleDleteSelectedLead =()=>{
     window.alert("are you sure you want to delete lead !")
-    
 
   };
 
