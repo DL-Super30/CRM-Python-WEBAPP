@@ -19,6 +19,19 @@ export default function LoginPage() {
     const [loginError, setLoginError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // Example function to authenticate and store token
+// const authenticateUser = async (credentials) => {
+//   try {
+//     const response = await axios.post('http://127.0.0.1:8000/api/token/', credentials);
+//     const { access } = response.data;
+//     localStorage.setItem('token', access); // Store the access token
+//     console.log('User authenticated successfully');
+//   } catch (error) {
+//     console.error('Error authenticating user:', error);
+//   }
+// };
+
+
     const handleLogin = async () => {
         let hasError = false;
         if (username === '') {
@@ -41,7 +54,7 @@ export default function LoginPage() {
                     "password": password
                 });
                 if (response.status === 200) {
-                    const token = response.data.token;
+                    const token = response.data.access;
                 // Store the token in localStorage for use in future requests
                 localStorage.setItem('token',token);
                 router.push('/dashboard');  // Redirect to the dashboard

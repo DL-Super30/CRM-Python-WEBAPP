@@ -29,13 +29,19 @@ const Leads = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const token = localStorage.getItem('token'); // Retrieve the token
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+          throw new Error('No token found. User might not be authenticated.');
+        }
+    
         const response = await axios.get('http://127.0.0.1:8000/api/leads/', {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-      });
-      console.log('Leads fetched successfully:', response.data);
+            Authorization: `Bearer ${token}`, // Attach the token in the Authorization header
+          },
+        });
+    
+        console.log('Leads fetched successfully:', response.data);
         setLeads(response.data);
       } catch (error) {
         console.error('Error fetching leads:', error);
@@ -43,7 +49,7 @@ const Leads = () => {
         setLoading(false);
       }
     };
-
+    
     fetchLeads();
   }, []);
 
