@@ -82,7 +82,7 @@ const Dashboard = () => {
   };
 
   const handleCreateLead = () => {
-    router.push('/leads/create-lead');
+    router.push('/opportunity/create-opportunity');
   };
 
   const handleCheckboxChange = (id) => {
