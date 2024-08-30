@@ -34,10 +34,10 @@ function Navbar(props) {
                         <li><Link href="/" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Home <i className="fa-solid fa-chevron-down"></i></Link></li>
                         <li><Link href="/home/storylead" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Leads <i className="fa-solid fa-chevron-down"></i></Link></li>
                         <li><Link href="/home/opportunities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Opportunities <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/learners" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Learners <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/courses" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Courses <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/activities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Activities <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/analytics" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Analytics <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/learners" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Learners <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/courses" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Courses <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/activities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Activities <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/analytics" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Analytics <i className="fa-solid fa-chevron-down"></i></Link></li>
                     </ul>
                 </nav>
 
@@ -56,12 +56,12 @@ function Navbar(props) {
                 <nav className="flex flex-col items-center p-4">
                     <ul className="flex flex-col gap-4">
                         <li><Link href="/" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Home <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/leads" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Leads <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/opportunities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Opportunities <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/learners" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Learners <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/courses" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Courses <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/activities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Activities <i className="fa-solid fa-chevron-down"></i></Link></li>
-                        <li><Link href="/analytics" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Analytics <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/leads" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Leads <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/opportunities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Opportunities <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/learners" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Learners <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/courses" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Courses <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/activities" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Activities <i className="fa-solid fa-chevron-down"></i></Link></li>
+                        <li><Link href="/home/analytics" className="underline hover:bg-red-600 hover:text-white border-none rounded p-2">Analytics <i className="fa-solid fa-chevron-down"></i></Link></li>
                     </ul>
                 </nav>
             </div>
