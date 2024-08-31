@@ -140,23 +140,23 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="">
+    <div className="bg-gray-100 min-h-screen">
       <Navbar />
-      <div className="bg-white-100 min-h-screen">
-        <div className="border-2 rounded-xl border-gray-200 mt-4 ml-2 mr-2 shadow-md shadow-gray-400">
+      <div className="bg-white min-h-screen">
+        <div className="border-2 rounded-xl border-gray-200 mt-4 mx-2 shadow-md shadow-gray-400">
           <div className="p-8">
-            <div className="flex items-center justify-between mb-4 p-4">
-              <div className="flex items-center space-x-2">
-                <FaIdCard className="text-white text-4xl bg-blue-500 p-2 rounded-md" />
-                <button className="text-xl flex items-center space-x-1">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-4 p-4">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-0">
+                <FaIdCard className="text-white text-3xl sm:text-4xl bg-blue-500 p-2 rounded-md" />
+                <button className="text-lg sm:text-xl flex items-center space-x-1">
                   <span>My Opportunities</span>
                   <FaAngleDown className="text-gray-600 font-semibold" />
                 </button>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-center space-x-0 sm:space-x-2">
                 <button
                   onClick={handleCreateLead}
-                  className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded"
+                  className="mb-2 sm:mb-0 flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded"
                 >
                   <span>Create Opportunity</span>
                   <FaAngleDown className="text-gray-600" />
@@ -169,10 +169,10 @@ const Dashboard = () => {
                   <FaAngleDown className="text-gray-600" />
                 </button>
                 {isDropdownOpen && (
-                  <div className="absolute bg-white border border-gray-200 shadow-lg rounded mt-2 right-2">
+                  <div className="absolute bg-white border border-gray-200 shadow-lg rounded mt-2 right-2 w-48">
                     <button
                       onClick={handleDeleteClick}
-                      className="block w-full text-left px-8 py-2 text-red-500 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                       disabled={selectedLeads.length === 0}
                     >
                       Delete
@@ -188,15 +188,15 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-            <div className="flex items-center mb-4">
+            <div className="flex flex-col sm:flex-row items-center mb-4">
               <input
                 type="text"
                 placeholder="Search"
                 value={searchTerm}
                 onChange={handleSearch}
-                className="border rounded-md px-4 py-2 w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-md px-4 py-2 w-full sm:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <div className="flex items-center ml-4">
+              <div className="flex items-center mt-4 sm:mt-0 sm:ml-4">
                 <button
                   onClick={() => toggleViewMode("table")}
                   className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "table" ? "bg-blue-500 text-white" : "text-black"}`}
@@ -214,66 +214,67 @@ const Dashboard = () => {
               </div>
             </div>
             {viewMode === 'table' ? (
-              <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 shadow-sm shadow-gray-400 rounded-half">
-                <thead className="bg-gray-200 rounded-md">
-                  <tr className="border-gray-400 border">
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                      <input
-                        type="checkbox"
-                        checked={selectedLeads.length === filteredData.length}
-                        onChange={() =>
-                          setSelectedLeads(
-                            selectedLeads.length === filteredData.length
-                            ? []
-                            : filteredData.map((lead) => lead.id)
-                        )
-                      }
-                      />
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200 h-100[calc(vh-100px)]">
-                  {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                    filteredData.map((lead) => (
-                      <tr key={lead.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <input
-                            type="checkbox"
-                            checked={selectedLeads.includes(lead.id)}
-                            onChange={() => handleCheckboxChange(lead.id)}
-                          />
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
-                          {lead.stack || 'N/A'}
-                        </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
-                          {lead.lead_status || 'N/A'}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">Opportunity Data Not Available</td>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 shadow-sm rounded-lg">
+                  <thead className="bg-gray-200">
+                    <tr className="border-gray-400 border">
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <input
+                          type="checkbox"
+                          checked={selectedLeads.length === filteredData.length}
+                          onChange={() =>
+                            setSelectedLeads(
+                              selectedLeads.length === filteredData.length
+                                ? []
+                                : filteredData.map((lead) => lead.id)
+                            )
+                          }
+                        />
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredData.length > 0 ? (
+                      filteredData.map((lead) => (
+                        <tr key={lead.id}>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <input
+                              type="checkbox"
+                              checked={selectedLeads.includes(lead.id)}
+                              onChange={() => handleCheckboxChange(lead.id)}
+                            />
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
+                          <td className={`px-4 py-4 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
+                            {lead.stack || 'N/A'}
+                          </td>
+                          <td className={`px-4 py-4 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
+                            {lead.lead_status || 'N/A'}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7" className="px-4 py-4 text-center text-sm text-gray-500">Opportunity Data Not Available</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <div className="flex space-x-4">
+              <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
                 {kanbanColumns.map((column) => (
-                  <div key={column.id} className={`flex flex-col w-1/4 p-4 border rounded-lg ${column.color}`}>
-                    <h2 className="text-xl font-semibold mb-2">{column.title}</h2>
+                  <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color}`}>
+                    <h2 className="text-lg sm:text-xl font-semibold mb-2">{column.title}</h2>
                     {column.leads.length > 0 ? (
                       column.leads.map((lead) => (
                         <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
@@ -300,3 +301,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

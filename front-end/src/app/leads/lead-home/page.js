@@ -446,7 +446,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-white-100">
       <Navbar />
-      <div className="container mx-auto p-4">
+      <div className=" mx-auto p-4">
         <div className="border-2 rounded-xl border-gray-200 mt-4 shadow-md shadow-gray-400">
           <div className="p-4 sm:p-8">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
@@ -518,7 +518,7 @@ const Dashboard = () => {
               </div>
             </div>
             {viewMode === 'table' ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto container">
                 <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 shadow-sm shadow-gray-400 rounded-md">
                   <thead className="bg-gray-200">
                     <tr className="border-gray-400 border">

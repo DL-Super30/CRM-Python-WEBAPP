@@ -118,7 +118,7 @@ export default function CreateLeadPage() {
       <div className="container mx-auto p-4 sm:p-6 lg:p-16 bg-white rounded-lg border-gray-600 shadow-lg">
         <div className="flex flex-col h-[calc(100vh-160px)]">
           <div className="flex items-center gap-4 font-bold text-xl sm:text-2xl mb-6">
-            <FaIdCard className="text-white text-3xl sm:text-4xl bg-blue-600 p-2 border-4 sm:border-6" />
+            <FaIdCard className="text-white text-3xl sm:text-4xl bg-blue-600 p-2  sm:border-6" />
             <span>Create Lead</span>
           </div>
           <div className="flex-1 overflow-y-auto lg:overflow-y-auto scrollbar-hidden lg:scrollbar-auto">
