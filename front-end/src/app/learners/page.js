@@ -19,7 +19,7 @@ const Dashboard = () => {
   // State variables for multiple dropdowns
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Select an option');
+  const [selectedOption, setSelectedOption] = useState('My Learners');
   
   // Handler functions for dropdowns
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
@@ -172,7 +172,7 @@ const Dashboard = () => {
                   onClick={handleCreateLead}
                   className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded mb-2 sm:mb-0"
                 >
-                  <span>Create Lead</span>
+                  <span>Create Learners</span>
                 </button>
                 <div className="relative">
                   <button
@@ -190,7 +190,7 @@ const Dashboard = () => {
                     <div className="absolute bg-white border border-gray-200 shadow-lg rounded mt-2 right-0 z-10">
                       <button
                         onClick={handleDeleteClick}
-                        className="block w-full text-left px-8 py-2 text-red-500 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                         disabled={selectedLeads.length === 0}
                       >
                         Delete
