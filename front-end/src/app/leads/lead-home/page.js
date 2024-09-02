@@ -53,7 +53,7 @@ const Dashboard = () => {
               console.error('Invalid leadId:', leadId);
               return;
             }
-            const response = await fetch(`http://99.79.49.0:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://18.206.91.4:8000/deletelead/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -77,9 +77,25 @@ const Dashboard = () => {
     }
   };
 
+  const stackColorMappings = {
+    'Stack1': 'bg-red-500', // Replace with your actual color mappings
+    'Stack2': 'bg-green-500',
+    'Stack3': 'bg-blue-500',
+    // Add more stack mappings as needed
+  };
+  
+  const statusColorMappings = {
+    'Not Contacted': 'bg-gray-500',
+    'Attempted': 'bg-yellow-500',
+    'Opportunity': 'bg-green-500',
+    'Cold Lead': 'bg-blue-500',
+    // Add more status mappings as needed
+  };
+  
+
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://99.79.49.0:8000/getleads');
+      const response = await fetch('http://18.206.91.4:8000/getleads');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);

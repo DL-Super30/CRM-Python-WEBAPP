@@ -16,18 +16,17 @@ const Dashboard = () => {
   const [kanbanColumns, setKanbanColumns] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
   
-  // State variables for multiple dropdowns
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('My Learners');
-  
-  // Handler functions for dropdowns
+
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
   
   const handleOptionClick = (option) => {
     setSelectedOption(option);
-    setIsDropdownOpen(false); // Close dropdown after selection
+    setIsDropdownOpen(false); 
   };
 
   const handleCreateLead = () => router.push('/leads/create-lead');
@@ -172,7 +171,9 @@ const Dashboard = () => {
                   onClick={handleCreateLead}
                   className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded mb-2 sm:mb-0"
                 >
+                   
                   <span>Create Learners</span>
+                  <FaAngleDown className="text-white " />
                 </button>
                 <div className="relative">
                   <button

@@ -13,7 +13,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function LoginPage() {
     const router = useRouter();
-    const apiUrl = 'http://3.19.227.183:8005/login'; 
+    const apiUrl = 'http://18.206.91.4:8000/login'; 
     const [Email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [EmailError, setEmailError] = useState('');
@@ -39,9 +39,14 @@ export default function LoginPage() {
 
         if (!hasError) {
             try {
-                const response = await axios.post(apiUrl, {
-                    email: Email,
-                    password: password
+                // Prepare form data
+                const formData = new URLSearchParams({
+                    'username': Email,
+                    'password': password
+                });
+
+                const response = await axios.post(apiUrl, formData, {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 });
 
                 if (response.status === 200) {
@@ -53,7 +58,14 @@ export default function LoginPage() {
                 if (error.response) {
                     console.error('Error response:', error.response);
 
-                    if (error.response.status === 404) {
+                    if (error.response.status === 422 && error.response.data) {
+                        const details = error.response.data.detail;
+                        if (Array.isArray(details)) {
+                            setLoginError(`Validation Errors: ${details.join(', ')}`);
+                        } else {
+                            setLoginError('An unknown validation error occurred.');
+                        }
+                    } else if (error.response.status === 404) {
                         setLoginError('The endpoint is not found. Please check the API URL.');
                     } else if (error.response.status === 401) {
                         setLoginError('Invalid email or password');
@@ -120,12 +132,12 @@ export default function LoginPage() {
                 </div>
             </div>
             <div className='flex-1 flex flex-col justify-center items-center p-5 md:p-10'>
-                <div className=" max-w-[1600px] mx-auto ">
-                    <h1 className='text-4xl font-bold text-center  mb-4 text-[rgb(4,45,96)]'>Seamlessly manage all learner data in a unified platform.</h1>
-                    <p className='text-xl text-center font-normal mb-6  text-[rgb(4,45,96)]'>Centralize customer data effortlessly. Streamline<br/> communication, sales, and support for seamless growth.</p>
+                <div className="max-w-[1600px] mx-auto">
+                    <h1 className='text-4xl font-bold text-center mb-4 text-[rgb(4,45,96)]'>Seamlessly manage all learner data in a unified platform.</h1>
+                    <p className='text-xl text-center font-normal mb-6 text-[rgb(4,45,96)]'>Centralize customer data effortlessly. Streamline<br/> communication, sales, and support for seamless growth.</p>
                     <Image 
-                         className=" w-auto"
-                        src="/1 Skill Capital - Login Page Image (1).png "
+                        className="w-auto"
+                        src="/1 Skill Capital - Login Page Image (1).png"
                         alt="Login Page Visual"
                         width={900}
                         height={900}
