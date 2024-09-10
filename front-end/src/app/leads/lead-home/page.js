@@ -53,7 +53,7 @@ const Dashboard = () => {
               console.error('Invalid leadId:', leadId);
               return;
             }
-            const response = await fetch(`http://18.206.91.4:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/deletelead/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -77,25 +77,23 @@ const Dashboard = () => {
     }
   };
 
-  const stackColorMappings = {
-    'Stack1': 'bg-red-500', // Replace with your actual color mappings
-    'Stack2': 'bg-green-500',
-    'Stack3': 'bg-blue-500',
-    // Add more stack mappings as needed
-  };
-  
   const statusColorMappings = {
-    'Not Contacted': 'bg-gray-500',
-    'Attempted': 'bg-yellow-500',
-    'Opportunity': 'bg-green-500',
-    'Cold Lead': 'bg-blue-500',
-    // Add more status mappings as needed
+    'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
+    'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
+    'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+    'Opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200',
+    'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
   };
-  
+  const stackColorMappings = {
+    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
+    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
+    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
+  };
+
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://18.206.91.4:8000/getleads');
+      const response = await fetch('http://127.0.0.1:8000/getleads');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -248,64 +246,67 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            {viewMode === 'table' ? (
-              <div className="overflow-x-auto container">
-                <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 shadow-sm shadow-gray-400 rounded-md">
-                  <thead className="bg-gray-200">
-                    <tr className="border-gray-400 border">
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        <input
-                          type="checkbox"
-                          checked={selectedLeads.length === filteredData.length}
-                          onChange={() =>
-                            setSelectedLeads(
-                              selectedLeads.length === filteredData.length
-                                ? []
-                                : filteredData.map((lead) => lead.id)
-                            )
-                          }
-                        />
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                      filteredData.map((lead) => (
-                        <tr key={lead.id}>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                            <input
-                              type="checkbox"
-                              checked={selectedLeads.includes(lead.id)}
-                              onChange={() => handleCheckboxChange(lead.id)}
-                            />
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
-                            {lead.stack || 'N/A'}
-                          </td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
-                            {lead.lead_status || 'N/A'}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
+{viewMode === 'table' ? (
+  <div className="overflow-hidden border border-gray-300 shadow-md sm:rounded-lg">
+    <table className="w-full divide-y divide-gray-200">
+      <thead className="bg-gray-200">
+        <tr className="flex w-full">
+          <th className="p-4 flex-grow">
+            <input
+              type="checkbox"
+              className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              checked={selectedLeads.length === filteredData.length}
+              onChange={() =>
+                setSelectedLeads(
+                  selectedLeads.length === filteredData.length
+                    ? []
+                    : filteredData.map((lead) => lead.id)
+                )
+              }
+            />
+          </th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase ">Created At</th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
+          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
+        </tr>
+      </thead>
+      <tbody className="min-h-[400px] bg-white flex flex-col">
+        {Array.isArray(filteredData) && filteredData.length > 0 ? (
+          filteredData.map((lead) => (
+            <tr key={lead.id} className="flex hover:bg-gray-100" style={{ height: '40px' }}>
+              <td className="p-2 ml-10 ">
+               <span className=""><input
+                  type="checkbox"
+                  checked={selectedLeads.includes(lead.id)}
+                  onChange={() => handleCheckboxChange(lead.id)}
+                  
+                />
+                </span>
+              </td>
+              <td className=" px-2 py-2 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
+              <td className="px-12 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
+              <td className="mr-12 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
+              <td className={`mr-26 px-4 py-2 flex-grow whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
+                {lead.stack || 'N/A'}
+              </td>
+              <td className={`mr-16 ml-6 px-4 py-2 flex-grow whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
+                {lead.lead_status || 'N/A'}
+              </td>
+              <td className=" mr-12 px-4 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
+            </tr>
+          ))
+        ) : (
+          <tr className="flex w-full justify-center" style={{ height: '50px' }}>
+            <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+) : (
               <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
                 {kanbanColumns.map((column) => (
                   <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color} mb-4 sm:mb-0`}>

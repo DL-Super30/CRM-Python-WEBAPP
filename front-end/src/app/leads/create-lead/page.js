@@ -88,7 +88,7 @@ export default function CreateLeadPage() {
         created_at: new Date().toISOString()
       };
 
-      const response = await fetch('http://18.206.91.4:8000/createleads', {
+      const response = await fetch('http://127.0.0.1:8000/createleads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export default function CreateLeadPage() {
 }
 
 const dropdownOptions = {
-  lead_status: ['Not Contacted', 'Attempted', 'Warm Lead', 'Cold Lead'],
+  lead_status: ['Not Contacted', 'Attempted', 'opportunity', 'Cold Lead'],
   class_mode: ['BLR Online', 'BLR Offline', 'HYD Online', 'HYD Offline'],
   lead_source: ['None', 'Walk In', 'Student Referral', 'Demo', 'Website', 'Google Ads', 'Facebook Ads'],
   stack: ['Life Skills', 'Study Abroad', 'HR'],

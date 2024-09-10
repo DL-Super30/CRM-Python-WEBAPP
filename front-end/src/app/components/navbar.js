@@ -14,6 +14,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
     opportunities: false,
     analytics: false,
     learners: false,
+    Batches:false,
     courses: false,
     activities: false,
   });
@@ -22,7 +23,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
   const [activeMenu, setActiveMenu] = useState('');
 
   const handleDropdownToggle = (menu) => {
-    // Close all other dropdowns if a different menu is opened
+   
     setDropdownOpen(prev => {
       const newDropdownOpen = Object.keys(prev).reduce((acc, key) => {
         acc[key] = key === menu ? !prev[key] : false;
@@ -48,8 +49,8 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           <Image 
             src="/menu.59f55fe5 (1).svg" 
             alt="Menu Icon" 
-            width={32}  // Adjust width as needed
-            height={32} // Adjust height as needed
+            width={32}  
+            height={32} 
           />
         </div>
 
@@ -57,13 +58,13 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
           <Image 
             src="/skillcapital.png" 
             alt="Skill Capital" 
-            width={192}  // Adjust width as needed
-            height={48}  // Adjust height as needed
+            width={192}  
+            height={48}  
           />
         </div>
 
         <div className="hidden lg:flex justify-items-end align-end sm:space-x-2 text-sm">
-          {['Home', 'leads', 'opportunities', 'learners', 'courses', 'activities', 'analytics'].map(menu => (
+          {['Home', 'leads', 'opportunities', 'learners','Batches', 'courses', 'activities', 'analytics'].map(menu => (
             <div className="relative" key={menu}>
               <button
                 onClick={() => handleDropdownToggle(menu)}
@@ -75,6 +76,12 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
               </button>
               {dropdownOpen[menu] && (
                 <div className="absolute left-0 mt-2 w-36 sm:w-40 bg-white shadow-lg rounded-md z-10">
+                  {menu === 'Home' && (
+                    <>
+                      <Link href="/skill-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100"> </Link>
+                      
+                    </>
+                  )}
                   {menu === 'leads' && (
                     <>
                       <Link href="../leads/lead-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Lead Home</Link>
@@ -93,6 +100,17 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                       <Link href="/learners/learner-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Learner Home</Link>
                       <Link href="/learners/learner-profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Learner Profile</Link>
                       <Link href="/learners/learner-reports" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Learner Reports</Link>
+                    </>
+                  )}
+                     {menu === 'Batches' && (
+                    <>
+                      <Link href="/batches/batches-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-home</Link>
+                      <Link href="/batches/batches-details" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-details</Link>
+                      <Link href="/batches/batches-learners" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-learners</Link>
+                      <Link href="/batches/batches-activity" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-activity</Link>
+                      <Link href="/batches/batches-notes" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-notes</Link>
+                      <Link href="/batches/batches-askai" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">batches-askai</Link>
+
                     </>
                   )}
                   {menu === 'courses' && (
@@ -125,8 +143,8 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
               <Image 
                 src="/Stars.png" 
                 alt="Stars" 
-                width={24}  // Adjust width as needed
-                height={24} // Adjust height as needed
+                width={24}  
+                height={24} 
               />
             </Link>
             <button onClick={onNotificationClick} aria-label="Open notifications">
@@ -158,6 +176,12 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                 </button>
                 {dropdownOpen[menu] && (
                   <div className="mt-2 w-full bg-gray-100 shadow-lg rounded-md">
+                     {menu === 'Home' && (
+                      <>
+                        <Link href="/leads/lead-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lead Home</Link>
+                       
+                      </>
+                    )}
                     {menu === 'leads' && (
                       <>
                         <Link href="/leads/lead-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lead Home</Link>
@@ -177,6 +201,13 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                         <Link href="/learners/learner-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Home</Link>
                         <Link href="/learners/learner-profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Profile</Link>
                         <Link href="/learners/learner-reports" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Reports</Link>
+                      </>
+                    )}
+                      {menu === 'Batches' && (
+                      <>
+                        <Link href="/courses/course-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Course Home</Link>
+                        <Link href="/courses/course-details" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Course Details</Link>
+                        <Link href="/courses/course-reports" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Course Reports</Link>
                       </>
                     )}
                     {menu === 'courses' && (

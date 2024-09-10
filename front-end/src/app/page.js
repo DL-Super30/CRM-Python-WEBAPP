@@ -13,21 +13,23 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 export default function LoginPage() {
     const router = useRouter();
-    const apiUrl = 'http://18.206.91.4:8000/login'; 
-    const [Email, setEmail] = useState('');
+    const apiUrl = 'http://127.0.0.1:8000/api/login/'; 
+    // const [Email, setEmail] = useState('');
+    const [username, setusername] = useState('');
+
     const [password, setPassword] = useState('');
-    const [EmailError, setEmailError] = useState('');
+    const [usernameError, setusernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [loginError, setLoginError] = useState('');
 
     const handleLogin = async () => {
         let hasError = false;
 
-        if (Email === '') {
-            setEmailError('Please enter email');
+        if (username === '') {
+            setusernameError('Please enter username');
             hasError = true;
         } else {
-            setEmailError('');
+            setusernameError('');
         }
 
         if (password === '') {
@@ -39,9 +41,9 @@ export default function LoginPage() {
 
         if (!hasError) {
             try {
-                // Prepare form data
+              
                 const formData = new URLSearchParams({
-                    'username': Email,
+                    'username': username,
                     'password': password
                 });
 
@@ -91,14 +93,14 @@ export default function LoginPage() {
                         height={100}
                     />
                     <div className='border-inherit border-2 rounded-md shadow-lg p-6 md:w-4/5'>
-                        <label className='font-normal text-sm'>Email</label>
+                        <label className='font-normal text-sm'>username</label>
                         <TextField
                             fullWidth
-                            id="email"
-                            value={Email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            error={!!EmailError}
-                            helperText={EmailError}
+                            id="username"
+                            value={username}
+                            onChange={(e) => setusername(e.target.value)}
+                            error={!!usernameError}
+                            helperText={usernameError}
                         />
 
                         <label className='font-normal text-sm mt-4'>Password</label>
