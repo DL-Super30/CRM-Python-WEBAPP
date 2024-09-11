@@ -243,81 +243,112 @@ const Dashboard = () => {
             </div>
 {viewMode === 'table' ? (
   <div className="overflow-hidden border border-gray-300 shadow-md sm:rounded-lg">
-    <table className="w-full divide-y divide-gray-200">
-      <thead className="bg-gray-200">
-        <tr className="flex w-full">
-          <th className="p-2">
+    <table className="w-full divide-y divide-gray-300 p-4">
+  <thead className="bg-gray-100 ">
+    <tr className="flex w-full ">
+      <th className="w-16 text-center p-2 py-4">
+        <input
+          type="checkbox"
+          className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          checked={selectedLeads.length === filteredData.length}
+          onChange={() =>
+            setSelectedLeads(
+              selectedLeads.length === filteredData.length
+                ? []
+                : filteredData.map((lead) => lead.id)
+            )
+          }
+        />
+      </th>
+      <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Created on
+      </th>
+      <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Opportunity Status
+      </th>
+      <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Name
+      </th>
+      <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Phone
+      </th>
+      <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Stack
+      </th>
+      <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+        Course
+      </th>
+    </tr>
+  </thead>
+  <tbody className="bg-white flex flex-col space-y-4" style={{ minHeight: '400px', height: '400px' }}>
+    {Array.isArray(filteredData) && filteredData.length > 0 ? (
+      filteredData.map((lead) => (
+        <tr
+          key={lead.id}
+          className="flex w-full hover:bg-gray-50  "
+          style={{ height: '40px' }}
+        >
+          <td className="w-16 text-center p-4 ">
             <input
               type="checkbox"
-              className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              checked={selectedLeads.length === filteredData.length}
-              onChange={() =>
-                setSelectedLeads(
-                  selectedLeads.length === filteredData.length
-                    ? []
-                    : filteredData.map((lead) => lead.id)
-                )
-              }
+              checked={selectedLeads.includes(lead.id)}
+              onChange={() => handleCheckboxChange(lead.id)}
             />
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Created At
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Opportunity Status
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Name
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Phone
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Stack
-          </th>
-          <th className="flex-grow px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">
-            Class Mode
-          </th>
+          </td>
+          <td className="w-32 py-1 text-center text-sm text-gray-800 " >
+            {lead.created_at || 'N/A'}
+          </td>
+          <td
+            className={`w-48 px-2 ml-4 py-1 text-center text-sm rounded-full ${
+              statusColorMappings[lead.oppo_status.toLowerCase()] || 'bg-gray-200'
+            }`}
+          >
+            {lead.oppo_status || 'N/A'}
+          </td>
+          <td className="w-40  py-1 text-center text-sm text-gray-800">
+            {lead.name || 'N/A'}
+          </td>
+          <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+            {lead.phone || 'N/A'}
+          </td>
+          <td
+            className={`w-32 px-2 py-1 text-center text-sm rounded-full ${
+              stackColorMappings[lead.stack] || 'bg-gray-200'
+            }`}
+          >
+            {lead.stack || 'N/A'}
+          </td>
+          <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
+            {lead.class_mode || 'N/A'}
+          </td>
         </tr>
-      </thead>
-      <tbody className="min-h-[400px] bg-white flex flex-col">
-        {Array.isArray(filteredData) && filteredData.length > 0 ? (
-          filteredData.map((lead) => (
-            <tr key={lead.id} className="flex  w-full hover:bg-gray-100" style={{ height: '40px' }}>
-              <td className="p-2">
-                <input
-                  type="checkbox"
-                  checked={selectedLeads.includes(lead.id)}
-                  onChange={() => handleCheckboxChange(lead.id)}
-                />
-              </td>
-              <td className="flex-grow py-2 whitespace-nowrap text-sm text-gray-900">
-                {lead.created_at || 'N/A'}
-              </td>
-              <td className={`flex-grow px-2 py-2  mr-22 text-sm rounded-full ${statusColorMappings[lead.oppo_status.toLowerCase()] || 'bg-white'}`}>
-                {lead.oppo_status|| 'N/A'}
-              </td>
-              <td className="flex-grow ml-8 px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                {lead.name || 'N/A'}
-              </td>
-              <td className="flex-grow px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                {lead.phone || 'N/A'}
-              </td>
-              <td className={`flex-grow px-4 py-2 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
-                {lead.stack || 'N/A'}
-              </td>
-              <td className="flex-grow px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                {lead.class_mode || 'N/A'}
-              </td>
-            </tr>
-          ))
-        ) : (
-          <tr className="flex w-full justify-center" style={{ height: '50px' }}>
-            <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+      ))
+    ) : (
+      <tr className="flex w-full justify-center" style={{ height: '100%' }}>
+        <td
+          colSpan="7"
+          className="px-4 py-2 text-center text-sm text-gray-500"
+        >
+          Opportunity data no found
+        </td>
+      </tr>
+    )}
+  </tbody>
+  {/* Pagination */}
+  <tfoot>
+    <tr className="flex w-full justify-between items-center px-4 py-2 bg-gray-100">
+      <td className="text-sm text-gray-600">0 to 0 of 0</td>
+      <td className="flex space-x-2">
+        <button className="text-sm text-gray-600">|&lt;</button>
+        <button className="text-sm text-gray-600">&lt;</button>
+        <span className="text-sm text-gray-600">Page 0 of 0</span>
+        <button className="text-sm text-gray-600">&gt;</button>
+        <button className="text-sm text-gray-600">&gt;|</button>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
   </div>
 ) : null}
     {viewMode === 'kanban' ? (
