@@ -72,14 +72,13 @@ const Dashboard = () => {
       router.push(`/leads/update-lead?id=${selectedLeads[0]}`);
     }
   };
-
   const statusColorMappings = {
-    'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
-    'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
-    'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-    'Opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200',
-    'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+    'visited': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
+    'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+    'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+    'lost opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
   };
+
   const stackColorMappings = {
     'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
     'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
@@ -89,7 +88,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/getOpportunities');
+      const response = await fetch('http://api.raghava.site/getOpportunities');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -121,10 +120,10 @@ const Dashboard = () => {
 
   const groupForKanban = (data) => {
     return [
-      { id: '1', title: 'Visiting', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.lead_status === 'Visiting') },
-      { id: '2', title: 'Visited', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.lead_status === 'Visited') },
-      { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
-      { id: '4', title: 'Lost Opportunitty', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
+      { id: '1', title: 'Visiting',  color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.oppo_status === 'Visiting') },
+      { id: '2', title: 'Visited', color:'bg-[#FFFF99]', leads: data.filter(lead => lead.oppo_status === 'Visited') },
+      { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'Opportunity') },
+      { id: '4', title: 'Lost Opportunitty',color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Cold Lead') },
     ];
   };
 
@@ -292,11 +291,11 @@ const Dashboard = () => {
                   onChange={() => handleCheckboxChange(lead.id)}
                 />
               </td>
-              <td className="flex-grow px-2 py-2 whitespace-nowrap text-sm text-gray-900">
+              <td className="flex-grow py-2 whitespace-nowrap text-sm text-gray-900">
                 {lead.created_at || 'N/A'}
               </td>
-              <td className={`flex-grow px-4 py-2 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.Opportunity_status] || 'bg-white'}`}>
-                {lead.Opportunity_status || 'N/A'}
+              <td className={`flex-grow px-2 py-2  mr-22 text-sm rounded-full ${statusColorMappings[lead.oppo_status.toLowerCase()] || 'bg-white'}`}>
+                {lead.oppo_status|| 'N/A'}
               </td>
               <td className="flex-grow ml-8 px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                 {lead.name || 'N/A'}
@@ -322,28 +321,28 @@ const Dashboard = () => {
   </div>
 ) : null}
     {viewMode === 'kanban' ? (
-              <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto"> 
-                {kanbanColumns.map((column) => (
-                  <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color} mb-4 sm:mb-0`}>
-                    <h2 className="text-lg sm:text-xl font-semibold mb-2">{column.title}</h2>
-                    {column.leads.length > 0 ? (
-                      column.leads.map((lead) => (
-                        <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
-                          <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
-                          <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
-                          <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
-                          <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
-                          <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
-                          <p><strong>Status:</strong> {lead.lead_status || 'N/A'}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">No Opportunities available</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-                          ) : null}
+    <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
+    {kanbanColumns.map((column) => (
+      <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color} mb-4 sm:mb-0`}>
+        <h2 className="text-lg sm:text-xl font-semibold mb-2">{column.title}</h2>
+        {column.leads.length > 0 ? (
+          column.leads.map((lead) => (
+            <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
+              <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
+              <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
+              <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
+              <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
+              <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
+              <p><strong>Status:</strong> {lead.opportunity_status || 'N/A'}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No leads available</p>
+        )}
+      </div>
+       ))}
+     </div>
+                 ) : null}
 
           </div>
         </div>
