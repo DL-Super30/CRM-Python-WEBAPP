@@ -73,7 +73,7 @@ const Dashboard = () => {
     }
   };
   const statusColorMappings = {
-    'visited': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
+    'visited': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
     'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
     'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
     'lost opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
