@@ -14,6 +14,7 @@ const Leads = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isKanbanView, setIsKanbanView] = useState(false); // New state to toggle between Kanban and Table views
   const [isEditMode, setIsEditMode] = useState(false);
   const [editLeadId, setEditLeadId] = useState(null);
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
@@ -133,6 +134,11 @@ const handleDeleteClick = async (leadId) => {
     }
   }
 };
+ // Function to toggle between Kanban and Table views
+ const toggleView = (viewType) => {
+  setIsKanbanView(viewType === 'kanban');
+};
+
   return (
     <>
       <Navbar />
@@ -141,7 +147,7 @@ const handleDeleteClick = async (leadId) => {
           <Image src="idcard.svg" alt="idcard" width={30} height={30}/><h1 className="text-xl font-medium ml-1 text-blue-950">All Leads</h1>
           <div className="flex space-x-2">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded" style={{ marginLeft: '52rem' }}
+              className="bg-blue-500 text-white px-4 h-8  rounded-md" style={{ marginLeft: '52rem' }}
               onClick={() => {
   setModalOpen(true);
   setIsEditMode(false); // Reset to create mode
@@ -151,7 +157,7 @@ const handleDeleteClick = async (leadId) => {
             >
               Create Lead
             </button>
-            <button className="bg-gray-200 text-gray-700 px-4 py-1 rounded">Actions</button>
+            <button className="bg-gray-200 text-gray-700 px-4 h-8 rounded-md">Actions</button>
           </div>
         </div>
         <div className='flex justify'>
@@ -166,87 +172,115 @@ const handleDeleteClick = async (leadId) => {
   />
   <FaSearch className="absolute left-3 top-2 text-gray-500" />
 </div>
-
-    <button
-      type="submit"
-      className="relative border-2 bg-blue-500 border-gray px-4 ml-2 rounded flex items-center text-white"
-    >
-       <FontAwesomeIcon icon={faTableCells} className="ml-2 text-white" /> Table
-    
-    </button>
-    <button type="submit" className="relative border-2 px-4 ml-2 border-gray rounded">Kanban</button>
-    </div>
-        <div className="bg-white  mt-4 rounded-md">
-          {/* <div className="flex space-x-2 p-4">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">Not Contacted</button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded">Attempted</button>
-            <button className="bg-yellow-500 text-white px-4 py-2 rounded">Warm Lead</button>
-            <button className="bg-gray-500 text-white px-4 py-2 rounded">Cold Lead</button>
-          </div> */}
-          <div className="overflow-x-auto ">
-            <table className="min-w-full border-2 bg-white mt-6 text-center rounded">
-              <thead className='border-2 bg-gray-100'>
-                <tr>
-                <th className="px-4 py-2 ">
-                 <input type="checkbox" />
-                  </th>
-                  <th className="px-6 py-2 text-xs text-gray-500 ">Created on</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Lead Status</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Name</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Phone</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Stack</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Course</th>
-                  <th className="px-6 py-2 text-xs text-gray-500">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr className='ml-2'>
-                   
-                    <td colSpan="7" className="px-6 py-2 text-center text-gray-500 ">Loading...</td>
-                  </tr>
-                ) : leads.length > 0 ? (
-                  leads.map((lead) => (
-                    <tr key={lead.id}>
-                       <td className="px-6 py-2 border-b-2">
-                 <input type="checkbox" className='ml-2' />
-                  </td>
-                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.date}</td>
-                      <td className="py-px text-sm text-gray-700 border-b-2 ">{lead.lead_status}</td>
-                      <td className="py-px text-sm text-gray-700 border-b-2">
-                        <Link href={`/leaduserdetails/${lead.id}`}>
-                          {lead.name}
-                        </Link>
-                      </td>
-                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.contact_no}</td>
-                      <td className="py-px text-sm text-gray-700 border-b-2">{lead.tech_stack}</td>
-                      <td className="py-px  text-sm text-gray-700 border-b-2">{lead.courses}</td>
-                      <td className="py-px text-sm text-gray-700 border-b-2">
-                        <button
-                          className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-                          onClick={() => handleEditClick(lead)}
-                        >
-                          Update
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-4 py-2 rounded"
-                          onClick={() => handleDeleteClick(lead.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Leads data not found</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+<button
+              type="submit"
+              className="relative border-2 px-4 ml-2 rounded-md flex items-center"
+              onClick={() => toggleView('table')} className={`p-1 rounded-md text-white ${!isKanbanView ? 'bg-blue-500' : 'bg-white-500'}`} // Switch to Table view
+            >
+              <FontAwesomeIcon icon={faTableCells} className="ml-2 text-black" /> Table
+            </button>
+            <button
+              type="submit"
+              className="relative border-2 px-4 ml-2 rounded-md"
+              onClick={() => toggleView('kanban')}  className={`p-1 rounded-md text-white ${isKanbanView ? 'bg-blue-500' : 'bg-white-500 border-2 text-black'}`}// Switch to Kanban view
+            >
+              Kanban
+            </button>
+          
           </div>
         </div>
-      </div>
+
+        {isKanbanView ? (
+  // Kanban View
+  <div className="kanban-board mt-4">
+    <div className="flex space-x-4">
+      {['Not Contacted', 'Attempted', 'Warm Lead', 'Cold Lead'].map((status) => {
+        // Define a color map
+        const colorMap = {
+          'Not Contacted': 'bg-green-500', 
+          'Attempted': 'bg-blue-400',  
+          'Warm Lead': 'bg-orange-400',   
+          'Cold Lead': 'bg-blue-400',    
+        };
+
+        return (
+          <div key={status} className={`w-1/3 p-4 rounded-md ${colorMap[status]}`}>
+            <h2 className="font-bold text-lg">{status}</h2>
+            <div className="mt-2">
+              {filteredLeads
+                .filter(lead => lead.lead_status === status)
+                .map(lead => (
+                  <div key={lead.id} className="bg-white p-2 my-2 rounded shadow">
+                    <Link href={`/leaduserdetails/${lead.id}`}>
+                      <h3 className="font-semibold">{lead.name}</h3>
+                    </Link>
+                    <p>{lead.courses}</p>
+                    <p>{lead.contact_no}</p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+) : (
+          // Table View
+          <div className="bg-white mt-4 rounded-md">
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-2 bg-white mt-6 text-center rounded">
+                <thead className="border-2 bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2">
+                      <input type="checkbox" />
+                    </th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Created on</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Lead Status</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Name</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Phone</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Stack</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Course</th>
+                    <th className="px-6 py-2 text-xs text-gray-500">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">Loading...</td>
+                    </tr>
+                  ) : leads.length > 0 ? (
+                    leads.map((lead) => (
+                      <tr key={lead.id}>
+                        <td className="px-6 py-2 border-b-2">
+                          <input type="checkbox" />
+                        </td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">{lead.date}</td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">{lead.lead_status}</td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">
+                          <Link href={`/leaduserdetails/${lead.id}`}>
+                            {lead.name}
+                          </Link>
+                        </td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">{lead.contact_no}</td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">{lead.tech_stack}</td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">{lead.courses}</td>
+                        <td className="py-px text-sm text-gray-700 border-b-2">
+                          <button className="bg-green-500 text-white px-4 py-2 rounded mr-2">Update</button>
+                          <button className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No leads found</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+     
 
       {modalOpen && (
         <div className="fixed overflow-auto w-screen h-full inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
