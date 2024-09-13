@@ -140,7 +140,7 @@ const handleDeleteClick = async (leadId) => {
 };
 
   return (
-    <>
+    <div>
       <Navbar />
       <div className="container mx-auto p-6">
         <div className="flex  items-center mb-4">
@@ -175,14 +175,14 @@ const handleDeleteClick = async (leadId) => {
 <button
               type="submit"
               className="relative border-2 px-4 ml-2 rounded-md flex items-center"
-              onClick={() => toggleView('table')} className={`p-1 rounded-md text-white ${!isKanbanView ? 'bg-blue-500' : 'bg-white-500'}`} // Switch to Table view
+              onClick={() => toggleView('table')} className={`p-1 rounded-md text-black ${!isKanbanView ? 'bg-blue-500' : 'bg-white-500'}`} // Switch to Table view
             >
               <FontAwesomeIcon icon={faTableCells} className="ml-2 text-black" /> Table
             </button>
             <button
               type="submit"
               className="relative border-2 px-4 ml-2 rounded-md"
-              onClick={() => toggleView('kanban')}  className={`p-1 rounded-md text-white ${isKanbanView ? 'bg-blue-500' : 'bg-white-500 border-2 text-black'}`}// Switch to Kanban view
+              onClick={() => toggleView('kanban')}  className={`p-1 rounded-md text-black ${isKanbanView ? 'bg-blue-500' : 'bg-white-500 border-2'}`}// Switch to Kanban view
             >
               Kanban
             </button>
@@ -265,8 +265,8 @@ const handleDeleteClick = async (leadId) => {
                         <td className="py-px text-sm text-gray-700 border-b-2">{lead.tech_stack}</td>
                         <td className="py-px text-sm text-gray-700 border-b-2">{lead.courses}</td>
                         <td className="py-px text-sm text-gray-700 border-b-2">
-                          <button className="bg-green-500 text-white px-4 py-2 rounded mr-2">Update</button>
-                          <button className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                          <button className="bg-green-500 text-white px-4 py-2 rounded mr-2" onClick={() => handleEditClick(lead)}>Update</button>
+                          <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => handleDeleteClick(lead.id)}>Delete</button>
                         </td>
                       </tr>
                     ))
@@ -441,7 +441,7 @@ Submit
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

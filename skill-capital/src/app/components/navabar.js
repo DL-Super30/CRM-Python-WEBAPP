@@ -102,7 +102,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                       <Link href="/leads" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Leads Page</Link>
                     )}
                     {menu === 'opportunities' && (
-                      <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Opportunities Page</Link>
+                      <Link href="/opportunities" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">opportunities</Link>
                     )}
                   </div>
                 )}
