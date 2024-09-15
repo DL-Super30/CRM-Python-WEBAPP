@@ -15,12 +15,11 @@ const Dashboard = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [kanbanColumns, setKanbanColumns] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
-  
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('My Learners');
-
+  const [selectedOption, setSelectedOption] = useState('All Learners');
+  
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
   
@@ -29,8 +28,7 @@ const Dashboard = () => {
     setIsDropdownOpen(false); 
   };
 
-  const handleCreateLead = () => router.push('/leads/create-lead');
-
+  const handleCreateOpportunity = () => router.push('/learners/create-learner');
   const handleCheckboxChange = (id) => {
     setSelectedLeads((prevSelected) =>
       prevSelected.includes(id)
@@ -43,16 +41,16 @@ const Dashboard = () => {
     if (window.confirm("Are you sure you want to delete the selected leads?")) {
       try {
         if (selectedLeads.length === 0) {
-          alert('No leads selected for deletion');
+          alert('No Opportunity selected for deletion');
           return;
         }
         await Promise.all(
           selectedLeads.map(async (leadId) => {
             if (!leadId) {
-              console.error('Invalid leadId:', leadId);
+              console.error('Invalid OpportunityId:', leadId);
               return;
             }
-            const response = await fetch(`http://99.79.49.0:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/deletelearner/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -69,16 +67,28 @@ const Dashboard = () => {
       }
     }
   };
-
   const handleUpdate = () => {
     if (selectedLeads.length === 1) {
       router.push(`/leads/update-lead?id=${selectedLeads[0]}`);
     }
   };
+  const statusColorMappings = {
+    'Up Coming': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
+    'On Going': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+    'On Hold': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+    'Completed': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
+  };
+
+  const stackColorMappings = {
+    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
+    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
+    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
+  };
+
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://99.79.49.0:8000/getleads');
+      const response = await fetch('http://127.0.0.1:8000/getlearners');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -110,10 +120,10 @@ const Dashboard = () => {
 
   const groupForKanban = (data) => {
     return [
-      { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.lead_status === 'Not Contacted') },
-      { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.lead_status === 'Attempted') },
-      { id: '3', title: 'Opportunity', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
-      { id: '4', title: 'Cold Lead', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
+      { id: '1', title: 'Up Coming',  color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.oppo_status === 'Up Coming') },
+      { id: '2', title: 'On Going', color:'bg-[#FFFF99]', leads: data.filter(lead => lead.oppo_status === 'On Going') },
+      { id: '3', title: 'On HOld', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'On HOld') },
+      { id: '4', title: 'Completed',color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Completed') },
     ];
   };
 
@@ -168,12 +178,10 @@ const Dashboard = () => {
               </div>
               <div className="flex flex-col sm:flex-row items-center space-x-2">
                 <button
-                  onClick={handleCreateLead}
+                  onClick={handleCreateOpportunity}
                   className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded mb-2 sm:mb-0"
                 >
-                   
-                  <span>Create Learners</span>
-                  <FaAngleDown className="text-white " />
+                  <span>Create learner</span>
                 </button>
                 <div className="relative">
                   <button
@@ -191,7 +199,7 @@ const Dashboard = () => {
                     <div className="absolute bg-white border border-gray-200 shadow-lg rounded mt-2 right-0 z-10">
                       <button
                         onClick={handleDeleteClick}
-                        className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                        className="block w-full text-left px-8 py-2 text-red-500 hover:bg-gray-100"
                         disabled={selectedLeads.length === 0}
                       >
                         Delete
@@ -233,86 +241,158 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-            {viewMode === 'table' ? (
-              <div className="overflow-x-auto container">
-                <table className="min-w-full divide-y divide-gray-200 border-2 border-gray-200 shadow-sm shadow-gray-400 rounded-md">
-                  <thead className="bg-gray-200">
-                    <tr className="border-gray-400 border">
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        <input
-                          type="checkbox"
-                          checked={selectedLeads.length === filteredData.length}
-                          onChange={() =>
-                            setSelectedLeads(
-                              selectedLeads.length === filteredData.length
-                                ? []
-                                : filteredData.map((lead) => lead.id)
-                            )
-                          }
-                        />
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Created At</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
-                      <th className="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                      filteredData.map((lead) => (
-                        <tr key={lead.id}>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                            <input
-                              type="checkbox"
-                              checked={selectedLeads.includes(lead.id)}
-                              onChange={() => handleCheckboxChange(lead.id)}
-                            />
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
-                            {lead.stack || 'N/A'}
-                          </td>
-                          <td className={`px-4 py-2 whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
-                            {lead.lead_status || 'N/A'}
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+{viewMode === 'table' ? (
+  <div className="overflow-x-auto border border-gray-300 shadow-md sm:rounded-lg">
+  <table className="w-full divide-y divide-gray-300 p-4 min-w-[1200px]"> {/* Adjust min-width as necessary */}
+    <thead className="bg-gray-100">
+      <tr className="flex w-full">
+        <th className="w-16 text-center p-2 py-4">
+          <input
+            type="checkbox"
+            className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            checked={selectedLeads.length === filteredData.length}
+            onChange={() =>
+              setSelectedLeads(
+                selectedLeads.length === filteredData.length
+                  ? []
+                  : filteredData.map((lead) => lead.id)
+              )
+            }
+          />
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Created Time
+        </th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Registered Date
+        </th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Last Name
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Phone
+        </th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Email
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Mode of Class
+        </th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Tech Stack
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Total Fees
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Fee Paid
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Due Amount
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
+          Due Date
+        </th>
+      </tr>
+    </thead>
+    <tbody className="bg-white flex flex-col space-y-4" style={{ minHeight: '400px', height: '400px' }}>
+      {Array.isArray(filteredData) && filteredData.length > 0 ? (
+        filteredData.map((lead) => (
+          <tr
+            key={lead.id}
+            className="flex w-full hover:bg-gray-50"
+            style={{ height: '40px' }}
+          >
+            <td className="w-16 text-center p-4">
+              <input
+                type="checkbox"
+                checked={selectedLeads.includes(lead.id)}
+                onChange={() => handleCheckboxChange(lead.id)}
+              />
+            </td>
+            <td className="w-32 py-1 text-center text-sm text-gray-800">
+              {lead.lead_createdtime || 'N/A'}
+            </td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.registered_date || 'N/A'}
+            </td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.lastname || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.phone || 'N/A'}
+            </td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.email || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.class_mode || 'N/A'}
+            </td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.tech_stack || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.total_fees || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.fee_paid || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.due_amount || 'N/A'}
+            </td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
+              {lead.due_date || 'N/A'}
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr className="flex w-full justify-center" style={{ height: '100%' }}>
+          <td colSpan="12" className="px-4 py-2 text-center text-sm text-gray-500">
+            No data found
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
+) : null}
+    {viewMode === 'kanban' ? (
+  <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
+    {kanbanColumns.map((column) => (
+      <div key={column.id} className="flex flex-col w-full sm:w-1/4 mb-4 sm:mb-0">
+        
+        {/* Header Section */}
+        <div className={`p-4 rounded-t-lg ${column.color}`}>
+          <h2 className="text-lg sm:text-xl font-semibold">{column.title}</h2>
+          <div className="text-md font-normal">
+            <p className="mt-2">₹{column.total_value || '0.00'}</p>
+            <p>{column.leads.length} Leads</p>
+          </div>
+        </div>
+
+        {/* Leads Data Section */}
+        <div className="flex-1 p-12 bg-gray-100 rounded-b-lg h-full">
+          {column.leads.length > 0 ? (
+            column.leads.map((lead) => (
+              <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
+                <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
+                <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
+                <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
+                <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
+                <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
+                <p><strong>Status:</strong> {lead.opportunity_status || 'N/A'}</p>
               </div>
-            ) : (
-              <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
-                {kanbanColumns.map((column) => (
-                  <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color} mb-4 sm:mb-0`}>
-                    <h2 className="text-lg sm:text-xl font-semibold mb-2">{column.title}</h2>
-                    {column.leads.length > 0 ? (
-                      column.leads.map((lead) => (
-                        <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
-                          <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
-                          <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
-                          <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
-                          <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
-                          <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
-                          <p><strong>Status:</strong> {lead.lead_status || 'N/A'}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">No leads available</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            ))
+          ) : (
+            <p className="text-gray-500">No data found.</p>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+) : null}
+
           </div>
         </div>
       </div>

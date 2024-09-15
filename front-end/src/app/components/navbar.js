@@ -198,7 +198,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
                     )}
                     {menu === 'learners' && (
                       <>
-                        <Link href="/learners/learner-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Home</Link>
+                        <Link href="/learners/learners-home" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Home</Link>
                         <Link href="/learners/learner-profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Profile</Link>
                         <Link href="/learners/learner-reports" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">Learner Reports</Link>
                       </>

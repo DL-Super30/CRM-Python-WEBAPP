@@ -37,7 +37,7 @@ export default function CreateLeadPage() {
   const dropdownOptions = {
     lead_status: ["New", "In Progress", "Completed", "Closed"],
     class_mode: ["International Online","India Online", "BLR Class room", "Hyd Class room"],
-    opportunity_status: ["Visiting", "Visited", "Demo Attended","Lost Opportunity"],
+    opportunity_status: ["Visiting", "Visited", "Demo Attended","Lost Opportunitty"],
     opportunity_stage: ["None", "Advanced Discussion", "Ready To Join","Visiting","Fee Negotiation","Batch allocation","Inserted to Demo","Closed Lost"],
     demo_attended_stage: ["None", "Advanced Discussion", "Ready To Join","Visiting","Fee Negotiation","Batch allocation","Inserted to Demo","Closed Lost"],
     visited_stage: ["None", "Advanced Discussion", "Ready To Join","Visiting","Fee Negotiation","Batch allocation","Inserted to Demo","Closed Lost","Not Visited", "Visited"],
@@ -86,7 +86,7 @@ export default function CreateLeadPage() {
     };
 
     try {
-      const response = await fetch("http://api.raghava.site/createopportunity", {
+      const response = await fetch("http://127.0.0.1:8000/createopportunity", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formattedDetails),

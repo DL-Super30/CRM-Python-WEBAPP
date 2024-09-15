@@ -88,7 +88,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://api.raghava.site/getOpportunities');
+      const response = await fetch('http://127.0.0.1:8000/getOpportunities');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -122,8 +122,8 @@ const Dashboard = () => {
     return [
       { id: '1', title: 'Visiting',  color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.oppo_status === 'Visiting') },
       { id: '2', title: 'Visited', color:'bg-[#FFFF99]', leads: data.filter(lead => lead.oppo_status === 'Visited') },
-      { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'Opportunity') },
-      { id: '4', title: 'Lost Opportunitty',color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Cold Lead') },
+      { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'Demo Attended') },
+      { id: '4', title: 'Lost Opportunitty',color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Lost Opportunitty') },
     ];
   };
 
