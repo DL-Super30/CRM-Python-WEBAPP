@@ -1,402 +1,316 @@
-// "use client"
-// import { useState } from 'react';
+"use client";
 
-// export default function TrainerDashboard() {
-//   const [activeTab, setActiveTab] = useState('details');
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { FaTable, FaThLarge, FaIdCard, FaAngleDown, FaAngleUp } from "react-icons/fa";
+import Navbar from '@/app/components/navbar';
+import BatchesForm from '@/app/components/BatchesForm';
 
-//   const renderContent = () => {
-//     switch (activeTab) {
-//       case 'details':
-//         return <div className="p-4">This is the details section content.</div>;
-//       case 'learners':
-//         return (
-//          <div>
-//       <div className="p-4">
-//         <div className="flex space-x-2 mb-4">
-//           {activities.map((activity, index) => (
-//             <button
-//               key={index}
-//               className="flex items-center space-x-2 bg-white border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-100 transition"
-//             >
-//               <FontAwesomeIcon icon={activity.icon} className={activity.color} />
-//               <span className="text-gray-700">{activity.name}</span>
-//             </button>
-//           ))}
-//         </div>
-//         </div>
-//             <div>
-//             <table className="min-w-full border border-gray-200">
-//               <thead>
-//                 <tr>
-//                   <th className="px-4 py-2 border-b">Learner Name</th>
-//                   <th className="px-4 py-2 border-b">Email</th>
-//                   <th className="px-4 py-2 border-b">Progress</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">John Doe</td>
-//                   <td className="px-4 py-2 border-b">john@example.com</td>
-//                   <td className="px-4 py-2 border-b">80%</td>
-//                 </tr>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">Jane Smith</td>
-//                   <td className="px-4 py-2 border-b">jane@example.com</td>
-//                   <td className="px-4 py-2 border-b">95%</td>
-//                 </tr>
-//               </tbody>
-//             </table>
-//           </div>
-//           </div>
-//         );
-//       case 'activity':
-//         return (
-//           <div className="p-4">
-//             <table className="min-w-full border border-gray-200">
-//               <thead>
-//                 <tr>
-//                   <th className="px-4 py-2 border-b">Activity</th>
-//                   <th className="px-4 py-2 border-b">Timestamp</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">Logged In</td>
-//                   <td className="px-4 py-2 border-b">2024-09-01 10:00 AM</td>
-//                 </tr>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">Completed Quiz</td>
-//                   <td className="px-4 py-2 border-b">2024-09-01 10:30 AM</td>
-//                 </tr>
-//               </tbody>
-//             </table>
-//           </div>
-//         );
-//       case 'notes':
-//         return (
-//           <div className="p-4">
-//             <table className="min-w-full border border-gray-200">
-//               <thead>
-//                 <tr>
-//                   <th className="px-4 py-2 border-b">Note</th>
-//                   <th className="px-4 py-2 border-b">Date</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">Note 1</td>
-//                   <td className="px-4 py-2 border-b">2024-09-01</td>
-//                 </tr>
-//                 <tr>
-//                   <td className="px-4 py-2 border-b">Note 2</td>
-//                   <td className="px-4 py-2 border-b">2024-09-02</td>
-//                 </tr>
-//               </tbody>
-//             </table>
-//           </div>
-//         );
-//       case 'askAi':
-//         return <div className="p-4">This is the Ask AI section content.</div>;
-//       default:
-//         return <div className="p-4">Select a tab to view content.</div>;
-//     }
-//   };
+const Dashboard = () => {
+  const router = useRouter();
 
-//   return (
-//     <div className="max-w-full  mx-auto">
-//        <div className="p-4">
-//              <div className="p-4 border-b flex items-center justify-between">
-//           <div className="flex items-center space-x-4">
-//             <button onClick={handleBackClick} className="text-sm text-gray-600 hover:underline flex items-center space-x-2">
-//               <FontAwesomeIcon icon={faAngleLeft} />
-//               <span>Back</span>
-//             </button>
-//             <div className="flex items-center space-x-2">
-//               <FontAwesomeIcon icon={faIdCard} className='text-white text-2xl bg-blue-500' />
-//               <h2 className="text-lg font-semibold">{details.name}</h2>
-//             </div>
-//           </div>
-//           <button className="flex justify-end bg-blue-700 text-white p-1 border rounded">Convert</button>
-//           <div className="p-4">
-//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-24">
-//             <div className="text-sm">
-//               <p className="text-gray-500 font-bold">Lead Source</p>
-//               <p className="flex items-center space-x-2 text-blue-500 hover:underline">{details.leadSource}</p>
-//             </div>
-//             <div>
-//               <p className="text-sm text-gray-500 font-bold">Phone</p>
-//               <div className="flex items-center space-x-2">
-//                 <FontAwesomeIcon icon={faPhone} className="text-blue-500" />
-//                 <a href={`tel:${details.phone}`} className="text-blue-500 hover:underline">
-//                   {details.phone}
-//                 </a>
-//               </div>
-//             </div>
-//             <div>
-//               <p className="text-sm text-gray-500 font-bold">Email</p>
-//               <div className="flex items-center space-x-2">
-//                 <FontAwesomeIcon icon={faEnvelope} className="text-blue-500" />
-//                 <a href={`mailto:${details.email}`} className="text-blue-500 hover:underline">
-//                   {details.email}
-//                 </a>
-//               </div>
-//             </div>
-//             <div>
-//               <p className="text-sm text-gray-500 font-bold ml-20">Lead Status</p>
-//               <p className="text-green-400 ml-20 border-b border-gray-300 pb-2">{details.leadStatus}</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       </div>
-//       <div className="bg-white shadow-md rounded-md">
-//         <div className="flex space-x-4 p-4 border-b">
-//           <button
-//             className={`px-4 py-2 ${
-//               activeTab === 'details' ? 'border-b-2 border-blue-500' : ''
-//             }`}
-//             onClick={() => setActiveTab('details')}
-//           >
-//             Details
-//           </button>
-//           <button
-//             className={`px-4 py-2 ${
-//               activeTab === 'learners' ? 'border-b-2 border-blue-500' : ''
-//             }`}
-//             onClick={() => setActiveTab('learners')}
-//           >
-//             Learners
-//           </button>
-//           <button
-//             className={`px-4 py-2 ${
-//               activeTab === 'activity' ? 'border-b-2 border-blue-500' : ''
-//             }`}
-//             onClick={() => setActiveTab('activity')}
-//           >
-//             Activity
-//           </button>
-//           <button
-//             className={`px-4 py-2 ${
-//               activeTab === 'notes' ? 'border-b-2 border-blue-500' : ''
-//             }`}
-//             onClick={() => setActiveTab('notes')}
-//           >
-//             Notes
-//           </button>
-//           <button
-//             className={`px-4 py-2 ${
-//               activeTab === 'askAi' ? 'border-b-2 border-blue-500' : ''
-//             }`}
-//             onClick={() => setActiveTab('askAi')}
-//           >
-//             Ask AI
-//           </button>
-//         </div>
+  const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState("table");
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [kanbanColumns, setKanbanColumns] = useState([]);
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Select Option');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-//         <div className="p-4">{renderContent()}</div>
-//       </div>
-//     </div>
-//   );
-// }
-"use client"
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faIdCard, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+  const toggleModal = () => setIsModalOpen(prev => !prev);
+  const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
 
-export default function TrainerDashboard() {
-  const [activeTab, setActiveTab] = useState('details');
-
-  // Define the `details` object with sample data
-  const [details, setDetails] = useState({
-    name: 'Trainer Name',
-    leadSource: 'Website',
-    phone: '123-456-7890',
-    email: 'trainer@example.com',
-    leadStatus: 'Active'
-  });
-
-  const handleBackClick = () => {
-    window.history.back(); // This will navigate back to the previous page
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/getlearners');
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setData(result);
+        setFilteredData(result);
+        const kanbanGrouped = groupForKanban(result);
+        setKanbanColumns(kanbanGrouped);
+      } else {
+        console.error('Fetched data is not an array:', result);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+  const statusColorMappings = {
+    'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
+    'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
+    'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+    'opportunity': 'bg-gradient-to-r from-pink-400 via-pink-300 to-pink-200',
+    'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+  };
+  const stackColorMappings = {
+    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
+    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
+    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
   };
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'details':
-        return <div className="p-4">This is the details section content.</div>;
-      case 'learners':
-        return (
-          <div>
-            <div className="p-4">
-              <div className="flex space-x-2 mb-4">
-                {/* Example learners */}
-                <button className="flex items-center space-x-2 bg-white border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-100 transition">
-                  <FontAwesomeIcon icon={faIdCard} className="text-blue-500" />
-                  <span className="text-gray-700">Activity 1</span>
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  useEffect(() => {
+    const filtered = data.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+    const kanbanGrouped = groupForKanban(filtered);
+    setKanbanColumns(kanbanGrouped);
+  }, [searchTerm, data]);
+
+  const groupForKanban = (data) => {
+    return [
+      { id: '1', title: 'Up Coming', color: 'bg-[#DCFCE7] border-t-green-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Up Coming') },
+      { id: '2', title: 'On Going', color: 'bg-[#DBEAFE] border-t-blue-300 border-t-4 ', leads: data.filter(lead => lead.oppo_status === 'On Going') },
+      { id: '3', title: 'On Hold', color: 'bg-[#FFEDD5] border-t-stone-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'On Hold') },
+      { id: '4', title: 'Completed', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Completed') },
+    ];
+  };
+
+  const handleSearch = (event) => setSearchTerm(event.target.value);
+  const toggleViewMode = (mode) => setViewMode(mode);
+
+  return (
+    <div className="min-h-screen bg-white-100">
+      <Navbar />
+      <div className="mx-auto p-4">
+        <div className="border-2 rounded-xl border-gray-200 mt-4 shadow-md shadow-gray-400">
+          <div className="p-4 sm:p-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-0 relative">
+                <FaIdCard className="text-white text-3xl sm:text-4xl bg-blue-500 p-2 rounded-md" />
+                <div className="relative">
+                  <button
+                    className="text-lg sm:text-xl flex items-center space-x-1"
+                    onClick={toggleDropdown}
+                  >
+                    <span>{selectedOption}</span>
+                    {isDropdownOpen ? (
+                      <FaAngleUp className="text-gray-600 font-semibold" />
+                    ) : (
+                      <FaAngleDown className="text-gray-600 font-semibold" />
+                    )}
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="absolute top-full left-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg">
+                      <button
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSelectedOption('Option 1')}
+                      >
+                        Option 1
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSelectedOption('Option 2')}
+                      >
+                        Option 2
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSelectedOption('Option 3')}
+                      >
+                        Option 3
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center space-x-2">
+                <button
+                  onClick={toggleModal}
+                  className="flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 border border-white rounded mb-2 sm:mb-0"
+                >
+                  <span>Create Batch</span>
+                </button>
+                <div className="relative">
+                  <button
+                    className="flex items-center justify-center space-x-2 text-black px-4 py-2 border border-black rounded"
+                  >
+                    <span>Actions</span>
+                    {isDropdownOpen ? (
+                      <FaAngleUp className="text-gray-600" />
+                    ) : (
+                      <FaAngleDown className="text-gray-600" />
+                    )}
+                  </button>
+                  {/* Dropdown for actions can be implemented here */}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center mb-4">
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={handleSearch}
+                className="border rounded-md px-4 py-2 w-full sm:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 sm:mb-0"
+              />
+              <div className="flex flex-col sm:flex-row items-center space-x-2">
+                <button
+                  onClick={() => toggleViewMode("table")}
+                  className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "table" ? "bg-blue-500 text-white" : "text-black"}`}
+                >
+                  <FaTable className="mr-2" />
+                  Table
+                </button>
+                <button
+                  onClick={() => toggleViewMode("kanban")}
+                  className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "kanban" ? "bg-blue-500 text-white" : "text-black"}`}
+                >
+                  <FaThLarge className="mr-2" />
+                  Kanban
                 </button>
               </div>
             </div>
-            <div>
-              <table className="min-w-full border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 border-b">Learner Name</th>
-                    <th className="px-4 py-2 border-b">Email</th>
-                    <th className="px-4 py-2 border-b">Progress</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="px-4 py-2 border-b">John Doe</td>
-                    <td className="px-4 py-2 border-b">john@example.com</td>
-                    <td className="px-4 py-2 border-b">80%</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-2 border-b">Jane Smith</td>
-                    <td className="px-4 py-2 border-b">jane@example.com</td>
-                    <td className="px-4 py-2 border-b">95%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      case 'activity':
-        return (
-          <div className="p-4">
-            <table className="min-w-full border border-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border-b">Activity</th>
-                  <th className="px-4 py-2 border-b">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-4 py-2 border-b">Logged In</td>
-                  <td className="px-4 py-2 border-b">2024-09-01 10:00 AM</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2 border-b">Completed Quiz</td>
-                  <td className="px-4 py-2 border-b">2024-09-01 10:30 AM</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        );
-      case 'notes':
-        return (
-          <div className="p-4">
-            <table className="min-w-full border border-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border-b">Note</th>
-                  <th className="px-4 py-2 border-b">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-4 py-2 border-b">Note 1</td>
-                  <td className="px-4 py-2 border-b">2024-09-01</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2 border-b">Note 2</td>
-                  <td className="px-4 py-2 border-b">2024-09-02</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        );
-      case 'askAi':
-        return <div className="p-4">This is the Ask AI section content.</div>;
-      default:
-        return <div className="p-4">Select a tab to view content.</div>;
-    }
-  };
+            {viewMode === 'table' ? (
+  <div className="overflow-hidden border border-gray-300 shadow-md sm:rounded-lg">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-300">
+        {/* Table header */}
+        <thead className="bg-gray-100 sticky top-0">
+          <tr className="flex w-full">
+            <th className="w-16 text-center p-2 py-4">
+              <input
+                type="checkbox"
+                className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                checked={selectedLeads.length === filteredData.length}
+                onChange={() =>
+                  setSelectedLeads(
+                    selectedLeads.length === filteredData.length
+                      ? []
+                      : filteredData.map((lead) => lead.id)
+                  )
+                }
+              />
+            </th>
+            <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Batch Name</th>
+            <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Trainer</th>
+            <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Batch Status</th>
+            <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Stage</th>
+            <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Slot</th>
+            <th className="w-64 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Stack</th>
+            <th className="w-64 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Tentative End Date</th>
+            <th className="w-64 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Timings</th>
+            <th className="w-64 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">No of Students</th>
+            <th className="w-64 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Location</th>
+          </tr>
+        </thead>
 
-  return (
-    <div className="max-w-full mx-auto">
-      <div className="p-4">
-        <div className="p-4 border-b flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={handleBackClick}
-              className="text-sm text-gray-600 hover:underline flex items-center space-x-2"
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-              <span>Back</span>
-            </button>
-            <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon={faIdCard} className="text-white text-2xl bg-blue-500" />
-              <h2 className="text-lg font-semibold">{details.name}</h2> {/* Using `details.name` */}
-            </div>
+        {/* Table body with vertical scroll */}
+        <tbody className="bg-white flex flex-col" style={{ overflowY: 'auto', maxHeight: '400px' }}>
+          {Array.isArray(filteredData) && filteredData.length > 0 ? (
+            filteredData.map((lead) => (
+              <tr key={lead.id} className="flex w-full hover:bg-gray-50 border-b border-gray-200">
+                <td className="w-16 text-center p-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedLeads.includes(lead.id)}
+                    onChange={() => handleCheckboxChange(lead.id)}
+                  />
+                </td>
+                <td className="w-32 py-1 text-center text-sm text-gray-800">{lead.batch_name || 'N/A'}</td>
+                <td className="w-48 px-2 ml-4 py-4 text-center text-sm rounded-full">{lead.trainer || 'N/A'}</td>
+                <td className="w-40 py-1 text-center text-sm text-gray-800">{lead.batch_status || 'N/A'}</td>
+                <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.stage || 'N/A'}</td>
+                <td className="w-48 py-4 text-center text-sm rounded-full">{lead.slot || 'N/A'}</td>
+                <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.stack || 'N/A'}</td>
+                <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.tentative_end_date || 'N/A'}</td>
+                <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.timings || 'N/A'}</td>
+                <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.no_of_students || 'N/A'}</td>
+                <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.location || 'N/A'}</td>
+              </tr>
+            ))
+          ) : (
+            <tr className="flex w-full justify-center" style={{ height: '100%' }}>
+              <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">
+                Batches data not found
+              </td>
+            </tr>
+          )}
+        </tbody>
+
+        {/* Table footer with pagination */}
+        <tfoot>
+          <tr className="flex w-full justify-between items-center px-4 py-2 bg-gray-100">
+            <td className="text-sm text-gray-600">0 to 0 of 0</td>
+            <td className="flex space-x-2">
+              <button className="text-sm text-gray-600">|&lt;</button>
+              <button className="text-sm text-gray-600">&lt;</button>
+              <span className="text-sm text-gray-600">Page 0 of 0</span>
+              <button className="text-sm text-gray-600">&gt;</button>
+              <button className="text-sm text-gray-600">&gt;|</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+            ) : viewMode === 'kanban' ? (
+              <div className="flex space-x-2 overflow-x-auto">
+                {kanbanColumns.map((column) => (
+                  <div key={column.id} style={{ width: '300px', minWidth: '300px' }}> {/* Fixed width without min-width */}
+
+                    {/* Header Section */}
+                    <div className={`p-4 rounded-t-xl ${column.color}`}>
+                      <h2 className="text-sm sm:text-xl font-semibold">{column.title}</h2>
+                      <div className="text-sm font-normal">
+                        <p className="mt-2">₹{column.total_value || '0.00'}</p>
+                        <p>{column.leads.length} Leads</p>
+                      </div>
+                    </div>
+
+                    {/* Leads Data Section */}
+                    <div className="pt-2">
+                      <div className="bg-gray-200 h-[63vh] px-0.5 max-w-full overflow-y-auto rounded">
+                        {column.leads.length > 0 ? (
+                          <div className="flex flex-col space-y-4 w-full">
+                            {column.leads.map((lead) => (
+                              <div key={lead.id} className="p-4 bg-white border rounded-md shadow-sm w-full">
+                                <p><strong>Batch Name:</strong> {lead.batch_name || 'N/A'}</p>
+                                <p><strong>Trainer:</strong> {lead.trainer|| 'N/A'}</p>
+                                <p><strong>Batch Status:</strong> {lead.batch_status || 'N/A'}</p>
+                                <p><strong>Stage:</strong> {lead.stage || 'N/A'}</p>
+                                <p><strong>Slot:</strong> {lead.slot || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.start_date || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.tentative_end_date || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.timings || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.no_of_students|| 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.location || 'N/A'}</p>
+
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-black-500 p-4 text-bold">No data found.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
-          <button className="flex justify-end bg-blue-700 text-white p-1 border rounded">Convert</button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-24 p-4">
-          <div className="text-sm">
-            <p className="text-gray-500 font-bold">Lead Source</p>
-            <p className="text-blue-500 hover:underline">{details.leadSource}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500 font-bold">Phone</p>
-            <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon={faPhone} className="text-blue-500" />
-              <a href={`tel:${details.phone}`} className="text-blue-500 hover:underline">
-                {details.phone}
-              </a>
-            </div>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500 font-bold">Email</p>
-            <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon={faEnvelope} className="text-blue-500" />
-              <a href={`mailto:${details.email}`} className="text-blue-500 hover:underline">
-                {details.email}
-              </a>
-            </div>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500 font-bold ml-20">Lead Status</p>
-            <p className="text-green-400 ml-20 border-b border-gray-300 pb-2">{details.leadStatus}</p>
-          </div>
-        </div>
+  
+
       </div>
-      <div className="bg-white shadow-md rounded-md">
-        <div className="flex space-x-4 p-4 border-b">
-          <button
-            className={`px-4 py-2 ${activeTab === 'details' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('details')}
-          >
-            Details
-          </button>
-          <button
-            className={`px-4 py-2 ${activeTab === 'learners' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('learners')}
-          >
-            Learners
-          </button>
-          <button
-            className={`px-4 py-2 ${activeTab === 'activity' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('activity')}
-          >
-            Activity
-          </button>
-          <button
-            className={`px-4 py-2 ${activeTab === 'notes' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('notes')}
-          >
-            Notes
-          </button>
-          <button
-            className={`px-4 py-2 ${activeTab === 'askAi' ? 'border-b-2 border-blue-500' : ''}`}
-            onClick={() => setActiveTab('askAi')}
-          >
-            Ask AI
-          </button>
-        </div>
-        <div className="p-4">{renderContent()}</div>
-      </div>
+      {isModalOpen && <BatchesForm toggleModal={toggleModal} />}
     </div>
   );
-}
+};
 
+export default Dashboard;

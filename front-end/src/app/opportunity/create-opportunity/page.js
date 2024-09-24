@@ -98,7 +98,7 @@ export default function CreateLeadPage() {
 
       setShowSuccess(true);
       setTimeout(() => {
-        router.push("/opportunity");
+        router.push("/opportunity/home-page");
         resetForm();
       }, 2000);
     } catch (error) {

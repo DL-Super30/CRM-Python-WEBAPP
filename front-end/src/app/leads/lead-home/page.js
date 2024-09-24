@@ -2,35 +2,36 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { FaTable, FaThLarge, FaIdCard, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Navbar from '@/app/components/navbar';
+import LeadForm from '@/app/components/LeadForm';  
+
 
 const Dashboard = () => {
-  const router = useRouter();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("table");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [kanbanColumns, setKanbanColumns] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
-  
-  // State variables for multiple dropdowns
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Select an option');
-  
-  // Handler functions for dropdowns
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
-  
+
   const handleOptionClick = (option) => {
     setSelectedOption(option);
-    setIsDropdownOpen(false); // Close dropdown after selection
+    setIsDropdownOpen(false);
   };
 
-  const handleCreateLead = () => router.push('/leads/create-lead');
+  const handleCreateLead = () => setIsModalOpen(true); // Open modal
+
+  const handleModalClose = () => setIsModalOpen(false); // Close modal
 
   const handleCheckboxChange = (id) => {
     setSelectedLeads((prevSelected) =>
@@ -81,7 +82,7 @@ const Dashboard = () => {
     'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
     'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
     'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-    'Opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200',
+    'opportunity': 'bg-gradient-to-r from-pink-400 via-pink-300 to-pink-200',
     'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
   };
   const stackColorMappings = {
@@ -125,10 +126,12 @@ const Dashboard = () => {
 
   const groupForKanban = (data) => {
     return [
-      { id: '1', title: 'Not Contacted', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.lead_status === 'Not Contacted') },
-      { id: '2', title: 'Attempted', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.lead_status === 'Attempted') },
-      { id: '3', title: 'Opportunity', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
-      { id: '4', title: 'Cold Lead', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
+      { id: '1', title: 'Not Contacted', color: 'bg-[#DCFCE7] border-t-green-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Not Contacted') },
+      { id: '2', title: 'Attempted', color: 'bg-[#DBEAFE] border-t-blue-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Attempted') },
+      { id: '4', title: 'Warm Lead', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Warm Lead') },
+
+      { id: '3', title: 'Opportunity', color: 'bg-[#FFEDD5] border-t-stone-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
+      { id: '4', title: 'Cold Lead', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
     ];
   };
 
@@ -246,92 +249,126 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-{viewMode === 'table' ? (
-  <div className="overflow-hidden border border-gray-300 shadow-md sm:rounded-lg">
-    <table className="w-full divide-y divide-gray-200">
-      <thead className="bg-gray-200">
-        <tr className="flex w-full">
-          <th className="p-4 flex-grow">
-            <input
-              type="checkbox"
-              className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              checked={selectedLeads.length === filteredData.length}
-              onChange={() =>
-                setSelectedLeads(
-                  selectedLeads.length === filteredData.length
-                    ? []
-                    : filteredData.map((lead) => lead.id)
-                )
-              }
-            />
-          </th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase ">Created At</th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
-          <th className="px-6 py-4 flex-grow text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
-        </tr>
-      </thead>
-      <tbody className="min-h-[400px] bg-white flex flex-col">
-        {Array.isArray(filteredData) && filteredData.length > 0 ? (
-          filteredData.map((lead) => (
-            <tr key={lead.id} className="flex hover:bg-gray-100" style={{ height: '40px' }}>
-              <td className="p-2 ml-10 ">
-               <span className=""><input
-                  type="checkbox"
-                  checked={selectedLeads.includes(lead.id)}
-                  onChange={() => handleCheckboxChange(lead.id)}
-                  
-                />
-                </span>
-              </td>
-              <td className=" px-2 py-2 whitespace-nowrap text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
-              <td className="px-12 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.name || 'N/A'}</td>
-              <td className="mr-12 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.phone || 'N/A'}</td>
-              <td className={`mr-26 px-4 py-2 flex-grow whitespace-nowrap text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
-                {lead.stack || 'N/A'}
-              </td>
-              <td className={`mr-16 ml-6 px-4 py-2 flex-grow whitespace-nowrap text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
-                {lead.lead_status || 'N/A'}
-              </td>
-              <td className=" mr-12 px-4 py-2 flex-grow whitespace-nowrap text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
-            </tr>
-          ))
-        ) : (
-          <tr className="flex w-full justify-center" style={{ height: '50px' }}>
-            <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
-) : (
-              <div className="flex flex-wrap sm:flex-nowrap space-x-4 overflow-x-auto">
+            {viewMode === 'table' ? (
+              <div className="container border border-gray-300 shadow-md sm:rounded-lg">
+                <div className="flex flex-col max-h-[400px]">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-200 sticky top-0 z-10">
+                        <tr>
+                          <th className="p-4 text-center">
+                            <input
+                              type="checkbox"
+                              className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              checked={selectedLeads.length === filteredData.length}
+                              onChange={() =>
+                                setSelectedLeads(
+                                  selectedLeads.length === filteredData.length
+                                    ? []
+                                    : filteredData.map((lead) => lead.id)
+                                )
+                              }
+                            />
+                          </th>
+                          <th className="px-12 py-4 text-left text-xs font-bold text-gray-500 uppercase">Created At</th>
+                          <th className="px-10 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stack</th>
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lead Status</th>
+                          <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Class Mode</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div className="overflow-y-auto flex-1">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <tbody className="bg-white">
+                        {Array.isArray(filteredData) && filteredData.length > 0 ? (
+                          filteredData.map((lead) => (
+                            <tr key={lead.id} className="hover:bg-gray-100 border-b border-gray-200">
+                              <td className="p-2 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedLeads.includes(lead.id)}
+                                  onChange={() => handleCheckboxChange(lead.id)}
+                                />
+                              </td>
+                              <td className="px-6 py-2 text-sm text-gray-900">{lead.created_at || 'N/A'}</td>
+                              <td className="px-6 py-2 text-sm text-gray-900">{lead.name || 'N/A'}</td>
+                              <td className="px-6 py-2 text-sm text-gray-900">{lead.phone || 'N/A'}</td>
+                              <td className={`px-6 py-2 text-sm rounded-full ${stackColorMappings[lead.stack] || 'bg-white'}`}>
+                                {lead.stack || 'N/A'}
+                              </td>
+                              <td className={`px-6 py-2 text-sm rounded-full ${statusColorMappings[lead.lead_status] || 'bg-white'}`}>
+                                {lead.lead_status || 'N/A'}
+                              </td>
+                              <td className="px-6 py-2 text-sm text-gray-900">{lead.class_mode || 'N/A'}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+
+            ) : viewMode === 'kanban' ? (
+              <div className="flex space-x-2 overflow-x-auto">
                 {kanbanColumns.map((column) => (
-                  <div key={column.id} className={`flex flex-col w-full sm:w-1/4 p-4 border rounded-lg ${column.color} mb-4 sm:mb-0`}>
-                    <h2 className="text-lg sm:text-xl font-semibold mb-2">{column.title}</h2>
-                    {column.leads.length > 0 ? (
-                      column.leads.map((lead) => (
-                        <div key={lead.id} className="mb-2 p-4 bg-white border rounded-md shadow-sm">
-                          <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
-                          <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
-                          <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
-                          <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
-                          <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
-                          <p><strong>Status:</strong> {lead.lead_status || 'N/A'}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">No leads available</p>
-                    )}
+                  <div key={column.id} style={{ width: '300px', minWidth: '300px' }}> {/* Fixed width without min-width */}
+
+                    {/* Header Section */}
+                    <div className={`p-4 rounded-t-xl ${column.color}`}>
+                      <h2 className="text-sm sm:text-xl font-semibold">{column.title}</h2>
+                      <div className="text-sm font-normal">
+                        <p className="mt-2">₹{column.total_value || '0.00'}</p>
+                        <p>{column.leads.length} Leads</p>
+                      </div>
+                    </div>
+
+                    {/* Leads Data Section */}
+                    <div className="pt-2">
+                      <div className="bg-gray-200 h-[63vh] px-0.5 max-w-full overflow-y-auto rounded">
+                        {column.leads.length > 0 ? (
+                          <div className="flex flex-col space-y-4 w-full">
+                            {column.leads.map((lead) => (
+                              <div key={lead.id} className="p-4 bg-white border rounded-md shadow-sm w-full">
+                                <p><strong>Name:</strong> {lead.name || 'N/A'}</p>
+                                <p><strong>Phone:</strong> {lead.phone || 'N/A'}</p>
+                                <p><strong>Created At:</strong> {lead.created_at || 'N/A'}</p>
+                                <p><strong>Stack:</strong> {lead.stack || 'N/A'}</p>
+                                <p><strong>Class Mode:</strong> {lead.class_mode || 'N/A'}</p>
+                                <p><strong>Status:</strong> {lead.opportunity_status || 'N/A'}</p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-black-500 p-4 text-bold">No data found.</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
+
+      {/* Modal for Create Lead Form */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+            <LeadForm onClose={handleModalClose} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
