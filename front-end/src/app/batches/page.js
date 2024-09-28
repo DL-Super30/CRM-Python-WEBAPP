@@ -21,34 +21,67 @@ const Dashboard = () => {
 
   const toggleModal = () => setIsModalOpen(prev => !prev);
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
+  
+  const handleDeleteClick = async () => {
+    if (selectedLeads.length === 0) {
+      alert('No leads selected for deletion');
+      return;
+    }
+
+    if (!window.confirm("Are you sure you want to delete the selected leads?")) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+        selectedLeads.map(async (leadId) => {
+          if (!leadId) {
+            console.error('Invalid leadId:', leadId);
+            return;
+          }
+          const response = await fetch(`http://127.0.0.1:8000/delete_batch/${leadId}/`, {
+            method: 'DELETE'
+          });
+          if (!response.ok) {
+            throw new Error(`Failed to delete lead with ID: ${leadId}`);
+          }
+        })
+      );
+      await fetchData();
+      setSelectedLeads([]); // Clear selected leads
+      alert('Leads deleted successfully');
+    } catch (error) {
+      console.error('Error deleting leads:', error);
+      alert('Failed to delete leads. Please check console for details.');
+    }
+  };
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/getlearners');
+      const response = await fetch('http://127.0.0.1:8000/get_batches');
+      if (!response.ok) throw new Error('Failed to fetch batches');
+      
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
         setFilteredData(result);
-        const kanbanGrouped = groupForKanban(result);
-        setKanbanColumns(kanbanGrouped);
+        setKanbanColumns(groupForKanban(result));
       } else {
         console.error('Fetched data is not an array:', result);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      alert('Error fetching data. Please try again later.');
     }
   }, []);
-  const statusColorMappings = {
-    'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
-    'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
-    'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-    'opportunity': 'bg-gradient-to-r from-pink-400 via-pink-300 to-pink-200',
-    'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
-  };
-  const stackColorMappings = {
-    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
-    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
-    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
+
+  const groupForKanban = (data) => {
+    return [
+      { id: '1', title: 'Upcoming', color: 'bg-[#DCFCE7] border-t-green-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Upcoming') },
+      { id: '2', title: 'Ongoing', color: 'bg-[#DBEAFE] border-t-blue-300 border-t-4 ', leads: data.filter(lead => lead.oppo_status === 'Ongoing') },
+      { id: '3', title: 'On Hold', color: 'bg-[#FFEDD5] border-t-stone-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'On Hold') },
+      { id: '4', title: 'Completed', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Completed') },
+    ];
   };
 
   useEffect(() => {
@@ -62,18 +95,8 @@ const Dashboard = () => {
       )
     );
     setFilteredData(filtered);
-    const kanbanGrouped = groupForKanban(filtered);
-    setKanbanColumns(kanbanGrouped);
+    setKanbanColumns(groupForKanban(filtered));
   }, [searchTerm, data]);
-
-  const groupForKanban = (data) => {
-    return [
-      { id: '1', title: 'Up Coming', color: 'bg-[#DCFCE7] border-t-green-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Up Coming') },
-      { id: '2', title: 'On Going', color: 'bg-[#DBEAFE] border-t-blue-300 border-t-4 ', leads: data.filter(lead => lead.oppo_status === 'On Going') },
-      { id: '3', title: 'On Hold', color: 'bg-[#FFEDD5] border-t-stone-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'On Hold') },
-      { id: '4', title: 'Completed', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.oppo_status === 'Completed') },
-    ];
-  };
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
   const toggleViewMode = (mode) => setViewMode(mode);
@@ -173,7 +196,7 @@ const Dashboard = () => {
             {viewMode === 'table' ? (
   <div className="overflow-hidden border border-gray-300 shadow-md sm:rounded-lg">
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-300">
+      <table className="min-w-full divide-y divide-gray-300 h-96">
         {/* Table header */}
         <thead className="bg-gray-100 sticky top-0">
           <tr className="flex w-full">
@@ -229,8 +252,8 @@ const Dashboard = () => {
               </tr>
             ))
           ) : (
-            <tr className="flex w-full justify-center" style={{ height: '100%' }}>
-              <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500">
+            <tr className="flex w-full justify-start" style={{ height: '100%' }}>
+              <td colSpan="7" className="px-4 py-2 text-center text-sm text-gray-500 pt-22">
                 Batches data not found
               </td>
             </tr>

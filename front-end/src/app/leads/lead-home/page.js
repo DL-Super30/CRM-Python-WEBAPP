@@ -54,7 +54,7 @@ const Dashboard = () => {
               console.error('Invalid leadId:', leadId);
               return;
             }
-            const response = await fetch(`http://127.0.0.1:8000/deletelead/${leadId}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/delete_lead/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -94,7 +94,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/getleads');
+      const response = await fetch('http://127.0.0.1:8000/get_leads');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);

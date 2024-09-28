@@ -462,7 +462,7 @@ const Dashboard = () => {
         }
         await Promise.all(
           selectedLeads.map(async (leadId) => {
-            const response = await fetch(`http://127.0.0.1:8000/deletelearner/${leadId}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/delete_learner/${leadId}/`, {
               method: 'DELETE'
             });
             if (!response.ok) {
@@ -488,7 +488,7 @@ const Dashboard = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/getlearners');
+      const response = await fetch('http://127.0.0.1:8000/get_learners');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -606,127 +606,80 @@ const Dashboard = () => {
               />
               <button onClick={() => toggleViewMode('table')} className={`flex items-center justify-center space-x-2 ${viewMode === 'table' ? 'bg-blue-500 text-white' : 'text-black'} px-4 py-2 border border-gray-300 rounded`}>
                 <FaTable className="text-lg" />
-                <span>Table View</span>
+                <span>Table </span>
               </button>
               <button onClick={() => toggleViewMode('kanban')} className={`flex items-center justify-center space-x-2 ${viewMode === 'kanban' ? 'bg-blue-500 text-white' : 'text-black'} px-4 py-2 border border-gray-300 rounded`}>
                 <FaThLarge className="text-lg" />
-                <span>Kanban View</span>
+                <span>Kanban </span>
               </button>
             </div>
             {viewMode === 'table' ? (
-  <div className="overflow-x-auto border border-gray-300 shadow-md sm:rounded-lg">
-    <table className="w-full divide-y divide-gray-300 p-4">
-      <thead className="bg-gray-100">
-        <tr className="flex w-full">
-          <th className="w-16 text-center p-2 py-4">
-            <input
-              type="checkbox"
-              className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              checked={selectedLeads.length === filteredData.length}
-              onChange={() =>
-                setSelectedLeads(
-                  selectedLeads.length === filteredData.length
-                    ? []
-                    : filteredData.map((lead) => lead.id)
-                )
-              }
-            />
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Created Time
-          </th>
-          <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Registered Date
-          </th>
-          <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Last Name
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Phone
-          </th>
-          <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Email
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Mode of Class
-          </th>
-          <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Tech Stack
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Total Fees
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Fee Paid
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Due Amount
-          </th>
-          <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">
-            Due Date
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white flex flex-col space-y-4" style={{ minHeight: '400px', height: '400px' }}>
-        {Array.isArray(filteredData) && filteredData.length > 0 ? (
-          filteredData.map((lead) => (
-            <tr
-              key={lead.id}
-              className="flex w-full hover:bg-gray-50"
-              style={{ height: '40px' }}
-            >
-              <td className="w-16 text-center p-4">
-                <input
-                  type="checkbox"
-                  checked={selectedLeads.includes(lead.id)}
-                  onChange={() => handleCheckboxChange(lead.id)}
-                />
-              </td>
-              <td className="w-32 py-1 text-center text-sm text-gray-800">
-                {lead.lead_createdtime || 'N/A'}
-              </td>
-              <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.registered_date || 'N/A'}
-              </td>
-              <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.lastname || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.phone || 'N/A'}
-              </td>
-              <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.email || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.class_mode || 'N/A'}
-              </td>
-              <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.tech_stack || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.total_fees || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.fee_paid || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.due_amount || 'N/A'}
-              </td>
-              <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">
-                {lead.due_date || 'N/A'}
-              </td>
-            </tr>
-          ))
-        ) : (
-          <tr className="flex w-full justify-center" style={{ height: '100%' }}>
-            <td colSpan="12" className="px-4 py-2 text-center text-sm text-gray-500">
-              No data found
+              <div className="border border-gray-300 shadow-md sm:rounded-lg overflow-x-auto">
+  <table className="w-full divide-y divide-gray-300">
+    <thead className="bg-gray-100 sticky top-0 z-10">
+      <tr className="flex w-full">
+        <th className="w-16 text-center p-2 py-4">
+          <input
+            type="checkbox"
+            className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            checked={selectedLeads.length === filteredData.length}
+            onChange={() =>
+              setSelectedLeads(
+                selectedLeads.length === filteredData.length
+                  ? []
+                  : filteredData.map((lead) => lead.id)
+              )
+            }
+          />
+        </th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Created Time</th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Registered Date</th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Last Name</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Phone</th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Email</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Mode of Class</th>
+        <th className="w-48 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Tech Stack</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Total Fees</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Fee Paid</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Due Amount</th>
+        <th className="w-32 px-2 py-4 text-center text-xs font-bold text-gray-600 uppercase">Due Date</th>
+      </tr>
+    </thead>
+    <tbody className="bg-white block max-h-96 overflow-y-auto">
+      {Array.isArray(filteredData) && filteredData.length > 0 ? (
+        filteredData.map((lead) => (
+          <tr key={lead.id} className="flex w-full hover:bg-gray-50" style={{ height: '40px' }}>
+            <td className="w-16 text-center p-4">
+              <input
+                type="checkbox"
+                checked={selectedLeads.includes(lead.id)}
+                onChange={() => handleCheckboxChange(lead.id)}
+              />
             </td>
+            <td className="w-32 py-1 text-center text-sm text-gray-800">{lead.lead_createdtime || 'N/A'}</td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.registered_date || 'N/A'}</td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.lastname || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.phone || 'N/A'}</td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.email || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.class_mode || 'N/A'}</td>
+            <td className="w-48 px-2 py-1 text-center text-sm text-gray-800">{lead.tech_stack || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.total_fees || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.fee_paid || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.due_amount || 'N/A'}</td>
+            <td className="w-32 px-2 py-1 text-center text-sm text-gray-800">{lead.due_date || 'N/A'}</td>
           </tr>
-        )}
-      </tbody>
-    </table>
-  </div>
+        ))
+      ) : (
+        <tr className="flex w-full justify-center" style={{ height: '100%' }}>
+          <td colSpan="12" className="px-4 py-2 text-center text-sm text-gray-500">
+            No data found
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
 ) : viewMode === 'kanban' ? (
   <div className="flex flex-wrap sm:flex-nowrap space-x-2 overflow-x-auto">
     {kanbanColumns.map((column) => (

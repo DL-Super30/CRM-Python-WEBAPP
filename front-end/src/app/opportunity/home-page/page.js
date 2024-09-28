@@ -425,22 +425,24 @@ const Dashboard = () => {
   const [kanbanColumns, setKanbanColumns] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Select Option"); // Initialize here
+  const [selectedOption, setSelectedOption] = useState("Select Option");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
 
-  const toggleViewMode = (mode) => {
-    setViewMode(mode);
-  };
-
+  // Modal toggle
   const toggleModal = () => setIsModalOpen(prev => !prev);
-   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
-   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
-   const handleOptionClick = (option) => {
-        setSelectedOption(option);
-        setIsDropdownOpen(false);
-      };
-    
+  
+  // View mode toggle
+  const toggleViewMode = (mode) => setViewMode(mode);
+  
+  // Dropdown handlers
+  const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
+  const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    setIsDropdownOpen(false);
+  };
+  
   const handleCreateOpportunity = () => {
     toggleModal();
   };
@@ -452,10 +454,54 @@ const Dashboard = () => {
         : [...prevSelected, id]
     );
   };
+  
+  const statusColorMappings = {
+        'visited': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
+        'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+        'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+        'lost opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
+      };
+    
+      const stackColorMappings = {
+        'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
+        'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
+        'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
+      };
+  const handleDeleteClick = async () => {
+    if (window.confirm("Are you sure you want to delete the selected leads?")) {
+      try {
+        if (selectedLeads.length === 0) {
+          alert('No Opportunity selected for deletion');
+          return;
+        }
+        await Promise.all(
+          selectedLeads.map(async (leadId) => {
+            if (!leadId) {
+              console.error('Invalid OpportunityId:', leadId);
+              return;
+            }
+            const response = await fetch(`http://127.0.0.1:8000/delete_opportunity/${leadId}/`, {
+              method: 'DELETE'
+            });
+            if (!response.ok) {
+              throw new Error(`Failed to delete lead with ID: ${leadId}`);
+            }
+          })
+        );
+        await fetchData();
+        setSelectedLeads([]);
+        alert('Leads deleted successfully');
+      } catch (error) {
+        console.error('Error deleting leads:', error);
+        alert('Failed to delete leads. Please check console for details.');
+      }
+    }
+  };
 
+  // Fetch data
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/getOpportunities');
+      const response = await fetch('http://127.0.0.1:8000/get_Opportunities');
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -470,26 +516,25 @@ const Dashboard = () => {
     }
   }, []);
 
-
-  const statusColorMappings = {
-    'visited': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
-    'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
-    'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-    'lost opportunity': 'bg-gradient-to-r from-green-400 via-blue-300 to-blue-200',
-
-  };
-
-  const stackColorMappings = {
-    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
-    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
-    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
-  };
+  // Handle updates to selected leads
+  const handleUpdate = async () => {
+    if (selectedLeads.length !== 1) {
+      alert('Please select exactly one lead to update.');
+      return;
+    }
     
+    const leadId = selectedLeads[0]; // Get the selected lead ID
+    // Here you could implement logic to update the lead
+    // For example, show a modal with a form to edit the lead's details
+    toggleModal(); // Opens modal for editing, you could pass leadId to the form
+  };
 
+  // Effect for fetching data on mount
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  // Filtering data based on search term
   useEffect(() => {
     const filtered = data.filter((item) =>
       Object.values(item).some((val) =>
@@ -501,15 +546,15 @@ const Dashboard = () => {
     setKanbanColumns(kanbanGrouped);
   }, [searchTerm, data]);
 
+  // Group data for Kanban view
   const groupForKanban = (data) => {
     return [
       { id: '1', title: 'Visiting', color: 'bg-[#FFCCCC]', leads: data.filter(lead => lead.oppo_status === 'Visiting') },
       { id: '2', title: 'Visited', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.oppo_status === 'Visited') },
       { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'Demo Attended') },
-      { id: '4', title: 'Lost Opportunitty', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Lost Opportunitty') },
+      { id: '4', title: 'Lost Opportunity', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Lost Opportunity') },
     ]
   };
-
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
 

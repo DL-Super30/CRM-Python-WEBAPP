@@ -293,7 +293,7 @@ const Navbar = ({ onNotificationClick, onUserClick }) => {
     { name: 'Opportunity', path:'/opportunity/home-page' },
     { name: 'learners', path: '/learners/learner-home' },
     { name: 'Batches', path: '/batches' },
-    { name: 'courses', path: '/courses/course-home' },
+    { name: 'courses', path: '/courses' },
     { name: 'activities', path: '/activities/activity-home' },
     { name: 'analytics', path: '/analytics/overview' }
   ];
