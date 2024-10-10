@@ -405,8 +405,6 @@
 // };
 
 // export default Dashboard;
-
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -428,6 +426,14 @@ const Dashboard = () => {
   const [selectedOption, setSelectedOption] = useState("Select Option");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
+
+  // State for lead counts
+  const [leadCounts, setLeadCounts] = useState({
+    visited: 0,
+    visiting: 0,
+    demoAttended: 0,
+    lostOpportunity: 0,
+  });
 
   // Modal toggle
   const toggleModal = () => setIsModalOpen(prev => !prev);
@@ -454,19 +460,7 @@ const Dashboard = () => {
         : [...prevSelected, id]
     );
   };
-  
-  const statusColorMappings = {
-        'visited': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
-        'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
-        'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-        'lost opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
-      };
-    
-      const stackColorMappings = {
-        'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
-        'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
-        'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
-      };
+
   const handleDeleteClick = async () => {
     if (window.confirm("Are you sure you want to delete the selected leads?")) {
       try {
@@ -508,6 +502,23 @@ const Dashboard = () => {
         setFilteredData(result);
         const kanbanGrouped = groupForKanban(result);
         setKanbanColumns(kanbanGrouped);
+        
+        // Count lead statuses
+        const counts = {
+          visited: 0,
+          visiting: 0,
+          demoAttended: 0,
+          lostOpportunity: 0,
+        };
+
+        result.forEach((lead) => {
+          if (lead.oppo_status === 'Visited') counts.visited++;
+          if (lead.oppo_status === 'Visiting') counts.visiting++;
+          if (lead.oppo_status === 'Demo Attended') counts.demoAttended++;
+          if (lead.oppo_status === 'Lost Opportunity') counts.lostOpportunity++;
+        });
+
+        setLeadCounts(counts);
       } else {
         console.error('Fetched data is not an array:', result);
       }
@@ -524,9 +535,7 @@ const Dashboard = () => {
     }
     
     const leadId = selectedLeads[0]; // Get the selected lead ID
-    // Here you could implement logic to update the lead
-    // For example, show a modal with a form to edit the lead's details
-    toggleModal(); // Opens modal for editing, you could pass leadId to the form
+    toggleModal(); // Opens modal for editing
   };
 
   // Effect for fetching data on mount
@@ -553,7 +562,20 @@ const Dashboard = () => {
       { id: '2', title: 'Visited', color: 'bg-[#FFFF99]', leads: data.filter(lead => lead.oppo_status === 'Visited') },
       { id: '3', title: 'Demo Attended', color: 'bg-[#CCFFCC]', leads: data.filter(lead => lead.oppo_status === 'Demo Attended') },
       { id: '4', title: 'Lost Opportunity', color: 'bg-[#CCCCFF]', leads: data.filter(lead => lead.oppo_status === 'Lost Opportunity') },
-    ]
+    ];
+  };
+  
+  const statusColorMappings = {
+    'visited': 'bg-gradient-to-r from-pink-400 via-red-300 to-red-200',
+    'visiting': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
+    'demo attended': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
+    'lost opportunity': 'bg-gradient-to-r from-green-400 via-green-300 to-green-200'
+  };
+
+  const stackColorMappings = {
+    'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
+    'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
+    'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
   };
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
@@ -667,6 +689,25 @@ const Dashboard = () => {
                       Kanban
                     </button>
                   </div>
+                  <div className="pl-4 flex space-x-4">
+  {/* Status Pills with Single Border and Underline */}
+  <div className="flex border border-black rounded-md overflow-hidden">
+    <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+      Visiting <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.visiting}</span>
+    </span>
+    <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+      Visited <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.visited}</span>
+    </span>
+    <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+      Demo Attended <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.demoAttended}</span>
+    </span>
+    <span className="flex items-center justify-between px-4 py-2 bg-green-200">
+      Lost Opportunity <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.lostOpportunity}</span>
+    </span>
+  </div>
+</div>
+
+
                 </div>
                 {viewMode === 'table' ? (
   <div className="container border border-gray-300 shadow-md sm:rounded-lg">
@@ -675,7 +716,7 @@ const Dashboard = () => {
         <table className="min-w-full table-fixed divide-y divide-gray-200">
           <thead className="bg-gray-200 sticky top-0 z-10">
             <tr>
-              <th className="w-12 p-4 text-center ">
+              <th className="w-12 p-2 text-center ">
                 <input
                   type="checkbox"
                   className="h-6 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
@@ -689,7 +730,7 @@ const Dashboard = () => {
                   }
                 />
               </th>
-              <th className="w-40 px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">Created On</th>
+              <th className="w-40 px-2 py-2 text-left text-xs font-bold text-gray-500 uppercase">Created On</th>
               <th className="w-40 px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase ">Opportunity Status</th>
               <th className="w-40 px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
               <th className="w-32 px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
@@ -701,7 +742,7 @@ const Dashboard = () => {
       </div>
       <div className="overflow-y-auto flex-1 max-h-[400px]">
         <table className="min-w-full table-fixed divide-y divide-gray-200">
-          <tbody className="bg-white">
+          <tbody className="">
             {Array.isArray(filteredData) && filteredData.length > 0 ? (
               filteredData.map((lead) => (
                 <tr key={lead.id} className="hover:bg-gray-100 border-b border-gray-200">

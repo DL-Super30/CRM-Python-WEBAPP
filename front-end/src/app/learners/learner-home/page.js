@@ -434,6 +434,14 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const [leadCounts, setLeadCounts] = useState({
+   
+    upcoming: 0,
+    ongoing: 0,
+    onHold: 0,
+    completed: 0,
+  });
+
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
@@ -612,6 +620,22 @@ const Dashboard = () => {
                 <FaThLarge className="text-lg" />
                 <span>Kanban </span>
               </button>
+              <div className="pl-4">
+              <div className=" flex border border-black rounded-md overflow-hidden">
+  <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+    Upcoming <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.upcoming}</span>
+  </span>
+  <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+    Ongoing <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.ongoing}</span>
+  </span>
+  <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+    On Hold <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.onHold}</span>
+  </span>
+  <span className="flex items-center justify-between px-4 py-2 bg-green-200">
+    Completed <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.completed}</span>
+  </span>
+</div>
+</div>
             </div>
             {viewMode === 'table' ? (
               <div className="border border-gray-300 shadow-md sm:rounded-lg overflow-x-auto">

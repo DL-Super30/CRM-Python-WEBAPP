@@ -210,6 +210,7 @@ export default function LeadForm({ onClose }) {
       <option value="Attempted">Attempted</option>
       <option value="Warm Lead">Warm Lead</option>
       <option value="Cold Lead">Cold Lead</option>
+      <option value="Opportunity">Opportunity</option>
     </select>
   </div>
 

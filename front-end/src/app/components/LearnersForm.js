@@ -53,7 +53,7 @@ export default function LeadForm({ onClose }) {
     const requiredFields = [
       "first_name", "lastname", "id_proof", "phone", "email", "location",
       "alternate_phone", "exchange_rate", "attended_demo", "learner_stage",
-      "tech_stack", "registered_course", "course_comments", "slack_access",
+      "tech_stack", "Up Coming", "On Going", "On Hold","Completed",
       "lms_access", "class_mode", "comment", "preferrable_time", "batch_timing",
       "learner_owner", "currency", "source", "description", "batch_id", "DOB",
       "registered_date"

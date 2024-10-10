@@ -1,11 +1,10 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { FaTable, FaThLarge, FaIdCard, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Navbar from '@/app/components/navbar';
-import LeadForm from '@/app/components/LeadForm';  
-
+import LeadForm from '@/app/components/LeadForm';
+import axios from 'axios';  // Added axios for API calls if you use it
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,12 +13,21 @@ const Dashboard = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [kanbanColumns, setKanbanColumns] = useState([]);
   const [selectedLeads, setSelectedLeads] = useState([]);
+  const [view, setView] = useState("Table");
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isActionsDropdownOpen, setIsActionsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Select an option');
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+
+  const [leadCounts, setLeadCounts] = useState({
+    notContacted: 0,
+    attempted: 0,
+    warmLead: 0,
+    coldLead: 0,
+    Opportunity: 0
+  });
 
   const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
   const toggleActionsDropdown = () => setIsActionsDropdownOpen(prev => !prev);
@@ -82,15 +90,15 @@ const Dashboard = () => {
     'Not Contacted': 'bg-gradient-to-r from-red-400 via-red-300 to-red-200',
     'Warm Lead': 'bg-gradient-to-r from-blue-400 via-red-300 to-red-200',
     'Attempted': 'bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200',
-    'opportunity': 'bg-gradient-to-r from-pink-400 via-pink-300 to-pink-200',
+    'Opportunity': 'bg-gradient-to-r from-pink-400 via-pink-300 to-pink-200',
     'Cold Lead': 'bg-gradient-to-r from-blue-400 via-blue-300 to-blue-200',
   };
+
   const stackColorMappings = {
     'Life Skills': 'bg-gradient-to-r from-red-500 via-red-400 to-red-300',
     'Study Abroad': 'bg-gradient-to-r from-green-500 via-green-400 to-green-300',
     'HR': 'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300',
   };
-
 
   const fetchData = useCallback(async () => {
     try {
@@ -101,6 +109,7 @@ const Dashboard = () => {
         setFilteredData(result);
         const kanbanGrouped = groupForKanban(result);
         setKanbanColumns(kanbanGrouped);
+        updateLeadCounts(result);
       } else {
         console.error('Fetched data is not an array:', result);
       }
@@ -129,15 +138,26 @@ const Dashboard = () => {
       { id: '1', title: 'Not Contacted', color: 'bg-[#DCFCE7] border-t-green-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Not Contacted') },
       { id: '2', title: 'Attempted', color: 'bg-[#DBEAFE] border-t-blue-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Attempted') },
       { id: '4', title: 'Warm Lead', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Warm Lead') },
-
       { id: '3', title: 'Opportunity', color: 'bg-[#FFEDD5] border-t-stone-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Opportunity') },
-      { id: '4', title: 'Cold Lead', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
+      { id: '5', title: 'Cold Lead', color: 'bg-[#E0E7FF] border-t-slate-300 border-t-4', leads: data.filter(lead => lead.lead_status === 'Cold Lead') },
     ];
+  };
+
+  const updateLeadCounts = (leads) => {
+    const notContacted = leads.filter(lead => lead.lead_status === 'Not Contacted').length;
+    const attempted = leads.filter(lead => lead.lead_status === 'Attempted').length;
+    const warmLead = leads.filter(lead => lead.lead_status === 'Warm Lead').length;
+    const coldLead = leads.filter(lead => lead.lead_status === 'Cold Lead').length;
+    const Opportunity = leads.filter(lead => lead.lead_status === 'Opportunity').length;
+
+    setLeadCounts({ notContacted, attempted, warmLead, coldLead, Opportunity });
   };
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
 
   const toggleViewMode = (mode) => setViewMode(mode);
+
+  
 
   return (
     <div className="min-h-screen bg-white-100">
@@ -224,30 +244,56 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center mb-4">
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearch}
-                className="border rounded-md px-4 py-2 w-full sm:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 sm:mb-0"
-              />
-              <div className="flex flex-col sm:flex-row items-center space-x-2">
-                <button
-                  onClick={() => toggleViewMode("table")}
-                  className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "table" ? "bg-blue-500 text-white" : "text-black"}`}
-                >
-                  <FaTable className="mr-2" />
-                  Table
-                </button>
-                <button
-                  onClick={() => toggleViewMode("kanban")}
-                  className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "kanban" ? "bg-blue-500 text-white" : "text-black"}`}
-                >
-                  <FaThLarge className="mr-2" />
-                  Kanban
-                </button>
-              </div>
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-4  sm:space-y-0">
+  {/* Search Input */}
+  <input
+    type="text"
+    placeholder="Search"
+    value={searchTerm}
+    onChange={handleSearch}
+    className="border rounded-md px-4 py-2 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+   <div className="flex space-x-2">
+    <button
+      onClick={() => toggleViewMode("table")}
+      className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "table" ? "bg-blue-500 text-white" : "text-black"}`}
+    >
+      <FaTable className="mr-2" />
+      Table
+    </button>
+    <button
+      onClick={() => toggleViewMode("kanban")}
+      className={`flex items-center px-4 py-2 rounded-md border ${viewMode === "kanban" ? "bg-blue-500 text-white" : "text-black"}`}
+    >
+      <FaThLarge className="mr-2" />
+      Kanban
+    </button>
+  </div>
+<div className="pr-24">
+  {/* Status Pills with Single Border and Underline */}
+  <div className=" flex border border-black rounded-md overflow-hidden">
+    <span className="flex items-center justify-start px-4 py-2 border-r border-black  bg-green-200">
+      Not Contacted <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.notContacted}</span>
+    </span>
+    <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+      Attempted <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full ">{leadCounts.attempted}</span>
+    </span>
+    <span className="flex items-center justify-between px-4 py-2 border-r border-black bg-green-200">
+      Warm Lead <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.warmLead}</span>
+    </span>
+    <span className="flex items-center justify-between px-2 py-2 border-r border-black bg-green-200">
+      Cold Lead <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.coldLead}</span>
+    </span>
+    <span className="flex items-center justify-between px-2 py-2 border-r border-black bg-green-200">
+      Opportunity <span className="ml-2 text-white-500 bg-red-400 px-2 border rounded-full">{leadCounts.Opportunity}</span>
+    </span>
+  </div>
+  </div>
+
+  {/* Table and Kanban Toggle */}
+ 
+
+
             </div>
             {viewMode === 'table' ? (
               <div className="container border border-gray-300 shadow-md sm:rounded-lg">
@@ -256,7 +302,7 @@ const Dashboard = () => {
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-200 sticky top-0 z-10">
                         <tr>
-                          <th className="p-4 text-center">
+                          <th className="p-2 text-center">
                             <input
                               type="checkbox"
                               className="h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
